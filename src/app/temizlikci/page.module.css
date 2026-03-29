@@ -1,0 +1,142 @@
+.wrapper {
+  padding-top: 80px;
+  background: var(--bg-main);
+  min-height: 100vh;
+}
+
+.header {
+  background: radial-gradient(circle at 10% 10%, rgba(100, 255, 218, 0.1) 0%, transparent 100%);
+  padding: 4rem 0;
+  border-bottom: 1px solid rgba(100, 255, 218, 0.05);
+}
+
+.headerContent h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.headerContent p {
+  color: var(--text-secondary);
+}
+
+.jobsSection {
+  padding: 6rem 0;
+}
+
+.jobsSection h2 {
+  margin-bottom: 3rem;
+  font-size: 1.8rem;
+}
+
+.jobList {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.jobCard {
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  border-left: 4px solid var(--accent-blue);
+  box-shadow: var(--shadow-md);
+}
+
+.jobBadge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.jobType {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.jobInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.infoLine strong {
+  color: var(--text-primary);
+}
+
+.jobActions {
+  margin-top: 1rem;
+}
+
+/* Availability Section */
+.availability {
+  padding: 6rem 0;
+  background: #020C1B;
+}
+
+.availCard {
+  background: var(--bg-card);
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.availCard h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.availCard p {
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.calendarSim {
+  margin-bottom: 3rem;
+  background: rgba(2, 12, 27, 0.5);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1rem;
+}
+
+.dayCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.statusDot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.3);
+}
+
+@media (max-width: 1024px) {
+  .jobList { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .jobList { grid-template-columns: 1fr; }
+  .headerContent h1 { font-size: 2rem; }
+  .availCard { padding: 2rem; }
+  .calGrid { grid-template-columns: repeat(4, 1fr); }
+}

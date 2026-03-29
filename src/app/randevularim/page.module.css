@@ -1,0 +1,291 @@
+.main {
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background: var(--bg-main);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.badge {
+  color: var(--primary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: block;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--text-primary), var(--primary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.bookingList {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bookingCard {
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid rgba(14, 165, 233, 0.1);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+.bookingCard:hover {
+  transform: translateY(-4px);
+  border-color: rgba(14, 165, 233, 0.25);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.cardMain {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 3rem;
+}
+
+.serviceInfo {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.iconBox {
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
+  border-radius: 12px;
+  color: var(--primary-dark);
+  flex-shrink: 0;
+}
+
+.idLabel {
+  font-size: 0.75rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.serviceInfo h3 {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.dateTimeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.infoRow span {
+  font-weight: 500;
+}
+
+.statusBox {
+  display: flex;
+  align-items: center;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.detailBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  background: var(--primary-xlight);
+  border: 1.5px solid rgba(14, 165, 233, 0.2);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  white-space: nowrap;
+}
+
+.detailBtn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.detailBtnOpen {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.chevron {
+  transition: transform 0.25s ease;
+}
+
+.detailBtnOpen .chevron {
+  transform: rotate(180deg);
+}
+
+/* Expandable detail panel */
+.detailPanel {
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1.5px solid rgba(14, 165, 233, 0.12);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem 2rem;
+  margin-bottom: 1rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.detailLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.detailValue {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.detailNote {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  padding: 0.9rem 1rem;
+  background: var(--primary-xlight);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(14, 165, 233, 0.12);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .detailGrid { grid-template-columns: 1fr 1fr; }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 6rem 2rem;
+  background: var(--primary-xlight);
+  border-radius: var(--radius-xl);
+  border: 1.5px dashed rgba(14, 165, 233, 0.25);
+  margin-top: 2rem;
+}
+
+.emptyIcon {
+  color: var(--primary);
+  margin-bottom: 2rem;
+  opacity: 0.6;
+}
+
+.emptyState h3 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.emptyState p {
+  color: var(--text-secondary);
+}
+
+.securityNote {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  max-width: 600px;
+  margin: 3rem auto 0;
+  padding: 1.5rem;
+  background: var(--primary-xlight);
+  border: 1.5px solid rgba(14, 165, 233, 0.15);
+  border-radius: 12px;
+  color: var(--text-muted);
+}
+
+.securityNote p {
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.loading {
+  text-align: center;
+  padding: 5rem;
+  color: var(--primary);
+  font-size: 1.2rem;
+}
+
+@media (max-width: 992px) {
+  .cardMain {
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+  }
+  .statusBox {
+    grid-column: 1 / 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 2.5rem; }
+  .cardMain {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .dateTimeInfo {
+    flex-direction: row;
+    gap: 2rem;
+  }
+  .bookingCard { padding: 1.5rem; }
+  .statusBox { grid-column: auto; }
+  .detailBtn { justify-content: flex-end; }
+}

@@ -1,0 +1,202 @@
+.dashHeader {
+  margin-bottom: 3rem;
+}
+
+.dashHeader h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+  color: var(--white);
+}
+
+.dashHeader p {
+  color: var(--text-secondary);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.statCard {
+  background: var(--bg-card);
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid rgba(100, 255, 218, 0.05);
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+.statLabel {
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.statTrend {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.securityNote {
+  margin-top: 2rem;
+  padding: 1.2rem;
+  background: rgba(2, 12, 27, 0.4);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  border: 1px solid rgba(100, 255, 218, 0.02);
+}
+
+.securityNote span {
+  line-height: 1.5;
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.tableCard, .sideCard {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(100, 255, 218, 0.05);
+  overflow-x: auto;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.viewAll {
+  color: var(--accent-blue);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.table th {
+  text-align: left;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding: 1rem;
+  border-bottom: 1px solid rgba(100, 255, 218, 0.05);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.table td {
+  padding: 1.2rem 1rem;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  border-bottom: 1px solid rgba(100, 255, 218, 0.02);
+}
+
+.statusBadge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.statusBadge[data-status="pending"] { background: rgba(241, 196, 15, 0.1); color: var(--warning); }
+.statusBadge[data-status="assigned"] { background: rgba(100, 255, 218, 0.1); color: var(--accent-blue); }
+.statusBadge[data-status="confirmed"] { background: rgba(46, 204, 113, 0.1); color: var(--success); }
+
+/* Side Card / App List */
+.sideCard h3 {
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+.appList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.appItem {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem;
+  background: rgba(2, 12, 27, 0.3);
+  border-radius: var(--radius-md);
+}
+
+.appAvatar {
+  width: 45px;
+  height: 45px;
+  background: rgba(100, 255, 218, 0.1);
+  color: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.appInfo p {
+  font-size: 0.9rem;
+  color: var(--white);
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.appInfo span {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.actionBtn {
+  margin-left: auto;
+  font-size: 0.8rem;
+  color: var(--accent-blue);
+  font-weight: 600;
+  border-bottom: 1px solid transparent;
+}
+
+.actionBtn:hover {
+  border-bottom-color: var(--accent-blue);
+}
+
+@media (max-width: 1200px) {
+  .statsGrid { grid-template-columns: repeat(2, 1fr); }
+  .mainGrid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .statsGrid { grid-template-columns: 1fr; }
+  .dashHeader h1 { font-size: 1.8rem; }
+}

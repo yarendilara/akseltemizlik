@@ -1,0 +1,345 @@
+.wrapper {
+  padding-top: 80px;
+}
+
+/* Intro Section */
+.intro {
+  text-align: center;
+  padding: 6rem 0;
+  background: linear-gradient(160deg, #F0F9FF 0%, #E0F2FE 100%);
+}
+
+.header {
+  max-width: 800px;
+  margin: 0 auto 5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  letter-spacing: 1px;
+}
+
+.header h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.header p {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+}
+
+.processGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.processCard {
+  background: var(--bg-card);
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+  border: 1.5px solid rgba(14, 165, 233, 0.1);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+}
+
+.processCard:hover {
+  transform: translateY(-5px);
+  background: var(--primary-light);
+  border-color: rgba(14, 165, 233, 0.3);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.processCard h3 {
+  margin-bottom: 0.8rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.processCard p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+/* Form Styling */
+.formSection {
+  background: var(--bg-white);
+  padding: 6rem 0;
+}
+
+.formContainer {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid rgba(14, 165, 233, 0.1);
+  box-shadow: var(--shadow-card);
+}
+
+.formHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.formHeader h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.formHeader p {
+  color: var(--text-secondary);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.fullWidth {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputGroup label,
+.fullWidth label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.inputGroup input,
+.fullWidth input,
+.fullWidth textarea,
+.fullWidth select {
+  background: #F8FAFC;
+  border: 1px solid #CBD5E1;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.inputGroup input::placeholder,
+.fullWidth input::placeholder,
+.fullWidth textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.inputGroup input:focus,
+.fullWidth input:focus,
+.fullWidth textarea:focus,
+.fullWidth select:focus {
+  border-color: var(--primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+/* District Selection UX */
+.flexHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.selectAllBtn {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.selectAllBtn:hover {
+  text-decoration: underline;
+  color: var(--primary-dark);
+}
+
+.checkboxGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem 1.5rem;
+  padding: 1.5rem;
+  background: #F8FAFC;
+  border-radius: var(--radius-sm);
+  max-height: 250px;
+  overflow-y: auto;
+  border: 1px solid #CBD5E1;
+}
+
+.checkboxGrid::-webkit-scrollbar {
+  width: 5px;
+}
+
+.checkboxGrid::-webkit-scrollbar-thumb {
+  background: rgba(14, 165, 233, 0.3);
+  border-radius: 10px;
+}
+
+.activeCheck {
+  color: var(--primary-dark) !important;
+  font-weight: 600;
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.checkLabel:hover {
+  color: var(--primary-dark);
+}
+
+.moreLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+}
+
+/* File Upload */
+.fileUpload {
+  margin: 1.5rem 0;
+}
+
+.uploadBox {
+  position: relative;
+  border: 2px dashed rgba(14, 165, 233, 0.3);
+  padding: 2.5rem;
+  text-align: center;
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: var(--primary-xlight);
+}
+
+.uploadBox:hover {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.uploadBox input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadBox span {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Terms Checkbox */
+.terms {
+  grid-column: span 2;
+  margin: 1.5rem 0;
+  padding: 1.5rem;
+  background: var(--primary-xlight);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(14, 165, 233, 0.15);
+}
+
+.terms label {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.terms input {
+  margin-top: 0.4rem;
+  accent-color: var(--primary);
+}
+
+.terms span {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Standards Section */
+.standards {
+  background: #0369A1;
+  padding: 8rem 0;
+  text-align: center;
+}
+
+.standards h2 {
+  font-size: 2.5rem;
+  margin-bottom: 4rem;
+  color: #ffffff;
+}
+
+.standardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4rem;
+}
+
+.standard h4 {
+  color: #BAE6FD;
+  font-size: 1.25rem;
+  margin-bottom: 1.2rem;
+}
+
+.standard p {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .processGrid { grid-template-columns: repeat(2, 1fr); }
+  .checkboxGrid { grid-template-columns: repeat(2, 1fr); }
+  .formContainer { padding: 2.5rem; }
+}
+
+@media (max-width: 768px) {
+  .header h1 { font-size: 2.5rem; }
+  .processGrid { grid-template-columns: 1fr; }
+  .standardGrid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .formGrid { grid-template-columns: 1fr; }
+  .fullWidth { grid-column: span 1; }
+  .terms { grid-column: span 1; }
+  .checkboxGrid { grid-template-columns: 1fr 1fr; }
+}

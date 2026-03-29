@@ -1,0 +1,658 @@
+.wrapper {
+  padding-top: 15vh;
+  min-height: 100vh;
+  background: var(--bg-main);
+}
+
+.bookingCard {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid rgba(14, 165, 233, 0.12);
+  box-shadow: var(--shadow-card);
+}
+
+/* Progress dots */
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(14, 165, 233, 0.18);
+  transition: all 0.3s ease;
+}
+
+.dot.done {
+  background: var(--primary);
+  box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+}
+
+.dot.current {
+  transform: scale(1.5);
+  background: var(--primary);
+}
+
+/* Step heading */
+.stepContent h2 {
+  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+/* Service selection cards */
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.selectCard {
+  background: #F8FAFC;
+  padding: 2rem;
+  border-radius: var(--radius-md);
+  border: 1.5px solid #E2E8F0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selectCard:hover {
+  border-color: var(--primary);
+  background: var(--primary-xlight);
+}
+
+.selectCard.active {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
+.selectCard .icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.selectCard h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.selectCard p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+/* Input groups */
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.inputGroup label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.inputGroup select,
+.inputGroup input,
+.inputGroup textarea {
+  background-color: #F8FAFC !important;
+  background: #F8FAFC !important;
+  border: 1.5px solid #CBD5E1;
+  padding: 1.2rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary) !important;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.inputGroup select::placeholder,
+.inputGroup input::placeholder,
+.inputGroup textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.inputGroup select:focus,
+.inputGroup input:focus,
+.inputGroup textarea:focus {
+  border-color: var(--primary);
+  background: #ffffff !important;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+/* Back button */
+.stepActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.backBtn {
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.backBtn:hover {
+  color: var(--primary-dark);
+}
+
+/* Calendar */
+.calendarContainer {
+  background: #F8FAFC;
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid #E2E8F0;
+}
+
+.calendarHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.calendarHeader h3 {
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.calendarHeader button {
+  padding: 0.5rem;
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.calendarHeader button:hover:not(:disabled) {
+  color: var(--primary);
+}
+
+.calendarHeader button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.dayLabel {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+}
+
+.dayBtn {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: #ffffff;
+  border: 1px solid #E2E8F0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dayBtn:hover:not(:disabled) {
+  background: var(--primary-xlight);
+  border-color: rgba(14, 165, 233, 0.4);
+  color: var(--primary-dark);
+}
+
+.dayBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  background: #F1F5F9;
+}
+
+.activeDay {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  font-weight: 700;
+  border-color: var(--primary-dark) !important;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.35);
+}
+
+.today {
+  color: var(--primary-dark);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.timeSection {
+  margin-top: 2rem;
+  overflow: hidden;
+}
+
+.sectionDivider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.sectionDivider::before,
+.sectionDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(14, 165, 233, 0.2);
+}
+
+.sectionDivider span {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.noSlot {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--error);
+  font-size: 0.85rem;
+  padding: 2rem;
+  background: rgba(239, 68, 68, 0.06);
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+/* Map Modal */
+.mapModalRoot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.mapContent {
+  width: 100%;
+  max-width: 900px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1.5px solid rgba(14, 165, 233, 0.15);
+  overflow: hidden;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.4);
+}
+
+.mapHeader {
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(14, 165, 233, 0.12);
+}
+
+.mapHeader h3 {
+  font-size: 1.2rem;
+  color: var(--text-primary);
+}
+
+.mapHeader button {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mapHeader button:hover {
+  color: var(--error);
+}
+
+.mapLoading {
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.1rem;
+  background: #0a192f;
+}
+
+.mapBox {
+  height: 500px;
+  background: #0a192f;
+  position: relative;
+}
+
+.mapPlaceholder {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-image: radial-gradient(rgba(14, 165, 233, 0.15) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.pulseArea {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.pin {
+  width: 20px;
+  height: 20px;
+  background: var(--primary);
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 0 10px var(--primary);
+}
+
+.pin::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 12px solid var(--primary);
+}
+
+.pulseArea::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.25;
+  animation: pulse 2s infinite ease-out;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(0.2); opacity: 0.8; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.elegantTextarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.elegantTextarea:focus {
+  min-height: 120px;
+}
+
+/* Slot buttons */
+.slotGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.slotBtn {
+  background: var(--primary-xlight);
+  border: 1.5px solid rgba(14, 165, 233, 0.2);
+  padding: 1.2rem 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.slotBtn:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.slotBtn.active {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+}
+
+.slotBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  background: #F1F5F9;
+}
+
+/* Summary box */
+.summaryBox {
+  background: var(--primary-xlight);
+  padding: 2.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 3rem;
+  border: 1.5px solid rgba(14, 165, 233, 0.15);
+}
+
+.summaryItem {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+}
+
+.summaryItem span {
+  color: var(--text-secondary);
+}
+
+.summaryItem strong {
+  color: var(--text-primary);
+}
+
+.operationNote {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--primary-light);
+  border-radius: 8px;
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  font-size: 0.85rem;
+}
+
+.operationNote p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Success screen */
+.successScreen {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.successIcon {
+  font-size: 5rem;
+  margin-bottom: 2rem;
+  color: var(--success);
+}
+
+.successScreen h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.successScreen p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Address tools */
+.addressTools {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.toolBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--primary-xlight);
+  border: 1.5px solid rgba(14, 165, 233, 0.2);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  flex: 1;
+}
+
+.toolBtn:hover:not(:disabled) {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+
+.toolBtn:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* Dropdown */
+.dropdownWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dropdownTrigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 1.2rem;
+  background: #F8FAFC;
+  border: 1.5px solid #CBD5E1;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.dropdownTrigger:hover {
+  border-color: var(--primary);
+  background: var(--primary-xlight);
+}
+
+.dropdownPanel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border: 1.5px solid rgba(14, 165, 233, 0.2);
+  border-radius: var(--radius-md);
+  margin-top: 8px;
+  z-index: 1000;
+  box-shadow: 0 12px 40px rgba(14, 165, 233, 0.15), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.dropdownScrollArea {
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 0.5rem;
+}
+
+.dropdownScrollArea::-webkit-scrollbar { width: 4px; }
+.dropdownScrollArea::-webkit-scrollbar-thumb {
+  background: rgba(14, 165, 233, 0.3);
+  border-radius: 10px;
+}
+
+.dropdownOption {
+  padding: 0.9rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.dropdownOption:hover {
+  background: var(--primary-xlight);
+  color: var(--primary-dark);
+  padding-left: 1.5rem;
+}
+
+.dropdownOption.selected {
+  color: var(--primary-dark);
+  background: var(--primary-light);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .bookingCard { padding: 1.5rem; }
+  .serviceGrid { grid-template-columns: 1fr; }
+  .slotGrid { grid-template-columns: repeat(2, 1fr); }
+  .calendarGrid { gap: 0.2rem; }
+  .dayBtn { font-size: 0.75rem; }
+  .formGrid { grid-template-columns: 1fr; }
+  .addressTools { flex-direction: column; }
+  .mapBox { height: 300px; }
+}

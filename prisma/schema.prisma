@@ -1,0 +1,169 @@
+// Aksel Temizlik - Hardened Prisma Schema
+// Focus: Integrity, Performance (Indexes), and Constraints
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  ADMIN
+  CLEANER
+  CUSTOMER
+}
+
+enum BookingStatus {
+  DRAFT
+  SUBMITTED
+  PENDING_REVIEW
+  AWAITING_ASSIGNMENT
+  ASSIGNED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELED
+  RESCHEDULED
+}
+
+enum ApplicationStatus {
+  SUBMITTED
+  UNDER_REVIEW
+  DOCUMENT_APPROVED
+  INTERVIEW_PENDING
+  APPROVED
+  REJECTED
+}
+
+/**
+ * USERS & PROFILES
+ */
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  passwordHash    String
+  role            UserRole         @default(CUSTOMER)
+  createdAt       DateTime         @default(now())
+  customerProfile CustomerProfile?
+  cleanerProfile  CleanerProfile?
+  auditLogs       AuditLog[]
+
+  @@index([email])
+}
+
+model CustomerProfile {
+  id     String @id @default(uuid())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
+  name   String
+  phone  String
+}
+
+model CleanerProfile {
+  id                 String              @id @default(uuid())
+  user               User                @relation(fields: [userId], references: [id])
+  userId             String              @unique
+  tcknEncrypted      String              @unique // Constraint: One TCKN per cleaner
+  districts          String              // JSON string of districts
+  services           String              // JSON string of service IDs
+  status             String              @default("ACTIVE")
+  availabilityConfig String              // JSON config
+  bookingAssignments BookingAssignment[]
+
+  @@index([status])
+}
+
+model CleanerApplication {
+  id            String            @id @default(uuid())
+  fullName      String
+  tcknEncrypted String            @unique // Constraint: No duplicate applications by TCKN
+  phone         String
+  email         String            @unique // Constraint: No duplicate applications by Email
+  districts     String            
+  serviceIds    String            
+  documentKey   String            // Private Object Key (Not public URL)
+  status        ApplicationStatus @default(SUBMITTED)
+  adminNotes    String?
+  createdAt     DateTime          @default(now())
+
+  @@index([status])
+  @@index([email])
+}
+
+/**
+ * BOOKINGS & SCHEDULING
+ */
+model Booking {
+  id               String            @id @default(uuid())
+  status           BookingStatus     @default(SUBMITTED)
+  customerId       String
+  serviceId        String
+  districtId       String
+  address          String
+  notes            String?
+  startAt          DateTime          // Normalized UTC
+  endAt            DateTime          // Normalized UTC (including duration + buffer)
+  isOverride       Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  assignments      BookingAssignment[]
+
+  @@index([status])
+  @@index([startAt, endAt]) // For conflict checks
+  @@index([districtId])
+}
+
+model BookingAssignment {
+  id        String   @id @default(uuid())
+  booking   Booking  @relation(fields: [bookingId], references: [id])
+  bookingId String
+  cleaner   CleanerProfile @relation(fields: [cleanerId], references: [id])
+  cleanerId String
+  assignedAt DateTime @default(now())
+
+  @@unique([bookingId, cleanerId]) // Constraint: No duplicate assignments for same job
+  @@index([cleanerId])
+}
+
+model AdminCalendarBlock {
+  id        String   @id @default(uuid())
+  date      DateTime @db.Date // Store date part separately for performance
+  startAt   DateTime // Full UTC timestamp for conflict range
+  endAt     DateTime // Full UTC timestamp
+  reason    String
+  districtId String? 
+
+  @@index([date])
+  @@index([startAt, endAt])
+}
+
+/**
+ * SECURITY & LOGS
+ */
+model AuditLog {
+  id             String   @id @default(uuid())
+  user           User     @relation(fields: [actorId], references: [id])
+  actorId        String
+  action         String   
+  targetResource String
+  targetId       String
+  payload        String   @db.Text // Large data logs
+  timestamp      DateTime @default(now())
+
+  @@index([actorId])
+  @@index([targetId])
+  @@index([timestamp])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}

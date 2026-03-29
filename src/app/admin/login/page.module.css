@@ -1,0 +1,99 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 50%, rgba(100, 255, 218, 0.05) 0%, rgba(2, 12, 27, 1) 100%);
+}
+
+.loginCard {
+  width: 450px;
+  background: var(--bg-card);
+  padding: 4rem;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(100, 255, 218, 0.05);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 3rem;
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: 2px;
+  margin-bottom: 1.5rem;
+}
+
+.logo span {
+  color: var(--accent-blue);
+  font-weight: 400;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 0.8rem;
+}
+
+.inputGroup label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.inputGroup input {
+  background: rgba(2, 12, 27, 0.5);
+  border: 1px solid rgba(100, 255, 218, 0.1);
+  padding: 1.2rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  outline: none;
+  text-align: center;
+  letter-spacing: 5px;
+}
+
+.inputGroup input:focus {
+  border-color: var(--accent-blue);
+  background: rgba(17, 34, 64, 1);
+}
+
+.error {
+  font-size: 0.85rem;
+  color: var(--error);
+  padding: 0.8rem;
+  background: rgba(231, 76, 60, 0.1);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(100, 255, 218, 0.05);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
