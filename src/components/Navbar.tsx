@@ -34,7 +34,6 @@ export default function Navbar() {
         <div className={`${styles.navLinks} ${isOpen ? styles.navLinksOpen : ''}`}>
           <a href="/hakkimizda" onClick={() => setIsOpen(false)}>Hakkımızda</a>
           <a href="/randevularim" onClick={() => setIsOpen(false)}>Randevularım</a>
-          <a href="/hizmet-veren-ol" onClick={() => setIsOpen(false)}>Hizmet Veren Ol</a>
         </div>
 
         {/* CTA Actions */}

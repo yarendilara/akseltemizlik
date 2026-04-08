@@ -106,9 +106,40 @@ export default function Home() {
 
         {/* Floating bubbles */}
         <div className={styles.bubblesContainer}>
-          {Array.from({ length: 28 }).map((_, i) => (
-            <div key={i} className={styles.bubble} />
-          ))}
+          {Array.from({ length: 28 }).map((_, i) => {
+            let backgroundImage = '';
+            
+            // Mapping new images to various bubbles
+            const imgMap: Record<number, string> = {
+              0: '/images/download.jpg',
+              2: '/images/empty_house_clean.png',
+              4: '/images/download-1.jpg',
+              6: '/images/cleaning_lady.png',
+              8: '/images/download-2.jpg',
+              10: '/images/images.jpg',
+              12: '/images/download-3.jpg',
+              14: '/images/images-1.jpg',
+              15: '/images/office_cleaning.png',
+              17: '/images/images-2.jpg',
+              19: '/images/download-4.jpg',
+              21: '/images/images-3.jpg',
+              22: '/images/empty_house_clean.png',
+              24: '/images/cleaning_lady.png',
+              25: '/images/download-5.jpg',
+              26: '/images/images-4.jpg',
+              27: '/images/download-6.jpg'
+            };
+
+            if (imgMap[i]) backgroundImage = `url(${imgMap[i]})`;
+
+            return (
+              <div 
+                key={i} 
+                className={`${styles.bubble} ${backgroundImage ? styles.bubbleImg : ''}`}
+                style={{ backgroundImage }}
+              />
+            );
+          })}
         </div>
 
         <div className="container">
@@ -134,8 +165,9 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.8 }}
             >
-              Yaşam Alanınıza{' '}
-              <span className={styles.highlight}>Pırıl Pırıl</span> Temizlik
+              Yaşam Alanınıza <br />
+              <span className={styles.highlight}>Pırıl Pırıl</span> <br />
+              Temizlik
             </motion.h1>
 
             <motion.p
@@ -242,17 +274,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ═══ STATS ═══ */}
-      <section className={styles.stats}>
-        <div className="container">
-          <div className={styles.statsInner}>
-            <StatItem value={1200} suffix="+" label="Tamamlanan Hizmet" />
-            <StatItem value={39}   suffix=""  label="İstanbul İlçesi" />
-            <StatItem value={98}   suffix="%"  label="Müşteri Memnuniyeti" />
-            <StatItem value={5}    suffix="+"  label="Yıllık Deneyim" />
-          </div>
-        </div>
-      </section>
+
 
       {/* ═══ WHY US ═══ */}
       <section className={styles.whyUs}>
@@ -451,14 +473,6 @@ export default function Home() {
                 whileTap={{ scale: 0.97 }}
               >
                 Hemen Randevu Al <ArrowRight size={18} />
-              </motion.a>
-              <motion.a
-                href="/hizmet-veren-ol"
-                className={styles.ctaBtnSecondary}
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Hizmet Veren Ol
               </motion.a>
             </div>
           </motion.div>

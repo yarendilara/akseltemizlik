@@ -34,6 +34,44 @@
   pointer-events: none;
 }
 
+.heroImgBubble1, .heroImgBubble2, .heroImgBubble3, .heroImgBubble4, .heroImgBubble5 {
+  position: absolute;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  border: 4px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  pointer-events: none;
+  animation: floatBubble 6s ease-in-out infinite;
+}
+
+/* Left side (3 bubbles) */
+.heroImgBubble1 { width: 130px; height: 130px; left: 5%; top: 20%; animation-delay: 0s; }
+.heroImgBubble3 { width: 110px; height: 110px; left: 12%; top: 55%; animation-delay: -2s; }
+.heroImgBubble4 { width: 90px; height: 90px; left: 4%; top: 65%; animation-delay: -4s; }
+
+/* Right side (2 bubbles) */
+.heroImgBubble2 { width: 150px; height: 150px; right: 6%; top: 25%; animation-delay: -1s; }
+.heroImgBubble5 { width: 120px; height: 120px; right: 10%; top: 60%; animation-delay: -3.5s; }
+
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-20px) rotate(3deg); }
+}
+
+@media (max-width: 1200px) {
+  .heroImgBubble1 { width: 100px; height: 100px; }
+  .heroImgBubble2 { width: 120px; height: 120px; }
+  .heroImgBubble3 { width: 80px; height: 80px; }
+  .heroImgBubble4 { width: 70px; height: 70px; }
+  .heroImgBubble5 { width: 90px; height: 90px; }
+}
+
+@media (max-width: 768px) {
+  .heroImgBubble1, .heroImgBubble2, .heroImgBubble3, .heroImgBubble4, .heroImgBubble5 { display: none; }
+}
+
 .heroContent {
   position: relative;
   z-index: 2;
@@ -220,14 +258,10 @@
 }
 
 .storyGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
-}
-
-@media (max-width: 768px) {
-  .storyGrid { grid-template-columns: 1fr; gap: 40px; }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .storyText h2 {
@@ -239,10 +273,10 @@
 }
 
 .storyText p {
-  font-size: 0.97rem;
+  font-size: 1rem;
   color: var(--text-secondary, #475569);
-  line-height: 1.75;
-  margin-bottom: 16px;
+  line-height: 1.8;
+  margin-bottom: 20px;
 }
 
 /* Timeline */
@@ -376,16 +410,10 @@
 }
 
 .teamGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  justify-content: center;
   gap: 20px;
-}
-
-@media (max-width: 900px) {
-  .teamGrid { grid-template-columns: repeat(2, 1fr); }
-}
-@media (max-width: 480px) {
-  .teamGrid { grid-template-columns: 1fr; }
+  flex-wrap: wrap;
 }
 
 .teamCard {

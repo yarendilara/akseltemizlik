@@ -38,7 +38,7 @@ function Section({ children, className }: { children: React.ReactNode; className
 }
 
 const VALUES = [
-  { icon: ShieldCheck, title: 'Güven & Şeffaflık',   desc: 'Her personelimiz adli sicil ve referans kontrolünden geçer. Ev ve ofislerinize yalnızca onaylı ekipler girer.' },
+  { icon: ShieldCheck, title: 'Güven & Şeffaflık',   desc: 'Hizmetimizin her aşamasında dürüstlük ve profesyonellik esas alınır. Beklentilerinizi tam karşılayan, güvenilir bir deneyim sunuyoruz.' },
   { icon: Leaf,        title: 'Çevre Dostu',          desc: 'Kullandığımız temizlik ürünleri çevre sertifikalı, aile ve evcil hayvan güvenlidir.' },
   { icon: Heart,       title: 'Müşteri Odaklılık',    desc: 'Her randevu benzersizdir. Özel taleplerinizi merkezi operasyon ekibimiz titizlikle değerlendirir.' },
   { icon: Award,       title: 'Profesyonellik',       desc: 'Düzenli eğitimler ve operasyon denetimleriyle hizmet kalitemizi sürekli yükseltiriz.' },
@@ -47,10 +47,7 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: 'Ahmet Yılmaz',   role: 'Kurucu & Operasyon Direktörü', initial: 'AY', color: '#0EA5E9' },
-  { name: 'Selin Kaya',     role: 'Müşteri Deneyimi Müdürü',       initial: 'SK', color: '#06B6D4' },
-  { name: 'Mehmet Demir',   role: 'Saha Operasyon Sorumlusu',      initial: 'MD', color: '#F97316' },
-  { name: 'Ayşe Çelik',     role: 'Kalite Kontrol Uzmanı',         initial: 'AÇ', color: '#10B981' },
+  { name: 'Ayselto', role: 'İşletme Kurucusu', initial: 'A', color: '#F97316' },
 ];
 
 const MILESTONES = [
@@ -68,6 +65,13 @@ export default function HakkimizdaPage() {
       <section className={styles.hero}>
         <div className={styles.heroDecor1} />
         <div className={styles.heroDecor2} />
+        
+        {/* Floating Image Bubbles */}
+        <div className={styles.heroImgBubble1} style={{ backgroundImage: 'url(/images/cleaning_lady.png)' }} />
+        <div className={styles.heroImgBubble2} style={{ backgroundImage: 'url(/images/office_cleaning.png)' }} />
+        <div className={styles.heroImgBubble3} style={{ backgroundImage: 'url(/images/empty_house_clean.png)' }} />
+        <div className={styles.heroImgBubble4} style={{ backgroundImage: 'url(/images/images-1.jpg)' }} />
+        <div className={styles.heroImgBubble5} style={{ backgroundImage: 'url(/images/download-1.jpg)' }} />
         <div className="container">
           <motion.div
             className={styles.heroContent}
@@ -84,18 +88,14 @@ export default function HakkimizdaPage() {
               Temizliği Bir <span className={styles.heroHighlight}>Sanata</span> Dönüştürüyoruz
             </h1>
             <p>
-              2019&apos;dan bu yana İstanbul genelinde binlerce ailenin ve işletmenin
-              güvendiği operasyonel temizlik merkezi. İnsanı odak noktasına aldık;
-              algoritmalar değil, uzman ellerin dokunaklı kalitesini sunuyoruz.
+              İstanbul genelinde güvenilir, şeffaf ve profesyonel temizlik hizmetleri sunuyoruz. 
+              İnsanı odak noktasına aldık; algoritmalar değil, uzman ellerin titiz dokunuşlarıyla 
+              yaşam alanlarınızı parlatıyoruz.
             </p>
             <div className={styles.heroCtas}>
               <motion.a href="/rezervasyon" className="btn-primary"
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 Hemen Randevu Al <ArrowRight size={16} />
-              </motion.a>
-              <motion.a href="/hizmet-veren-ol" className={styles.outlineBtn}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                Ekibimize Katıl
               </motion.a>
             </div>
           </motion.div>
@@ -107,74 +107,30 @@ export default function HakkimizdaPage() {
         </div>
       </section>
 
-      {/* ── Stats strip ── */}
-      <section className={styles.statsSection}>
-        <div className="container">
-          <Section className={styles.statsGrid}>
-            {[
-              { n: '1.200+', label: 'Tamamlanan Hizmet',    icon: Sparkles },
-              { n: '39',     label: 'İstanbul İlçesi',      icon: MapPin },
-              { n: '%98',    label: 'Müşteri Memnuniyeti',  icon: Star },
-              { n: '5+',     label: 'Yıllık Deneyim',       icon: Award },
-              { n: '80+',    label: 'Aktif Uzman Personel', icon: Users },
-            ].map(({ n, label, icon: Icon }) => (
-              <motion.div key={label} variants={fadeUp} className={styles.statCard}>
-                <div className={styles.statIconWrap}><Icon size={20} /></div>
-                <div className={styles.statNum}>{n}</div>
-                <div className={styles.statLabel}>{label}</div>
-              </motion.div>
-            ))}
-          </Section>
-        </div>
-      </section>
-
       {/* ── Story ── */}
       <section className={styles.storySection}>
         <div className="container">
           <div className={styles.storyGrid}>
             <motion.div
               className={styles.storyText}
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
+              style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}
             >
-              <span className={styles.sectionLabel}>Hikayemiz</span>
-              <h2>Küçük Bir Fikirden Büyük Bir Harekete</h2>
+              <span className={styles.sectionLabel}>Misyonumuz</span>
+              <h2>Güvenilir ve Kaliteli Temizlik</h2>
               <p>
-                Aksel Temizlik, 2019 yılında İstanbul&apos;da yaşayan insanların güvenilir,
-                şeffaf ve kaliteli bir temizlik hizmeti bulamamasındaki hayal kırıklığından
-                doğdu. Kurucu ortaklarımız bu boşluğu doldurmak için yola çıktı.
+                Aksel Temizlik, İstanbul&apos;da yaşayan insanların güvenilir, şeffaf ve 
+                gerçekten kaliteli bir temizlik hizmeti alabilmesi amacıyla kuruldu. 
+                Sektördeki boşluğu, insan odaklı hizmet anlayışımızla dolduruyoruz.
               </p>
               <p>
-                Bugün merkezi operasyon sistemimiz, her randevuyu tek tek yönetiyor.
-                Otomatik eşleştirme yapmıyoruz — ekibimiz, hangi uzmanın sizin
-                ihtiyacınıza en uygun olduğuna bizzat karar veriyor.
+                Merkezi operasyon sistemimizle her randevuyu tek tek yönetiyor, sizin için 
+                en doğru uzman ekibi bizzat belirliyoruz. Otomatik süreçlerin ötesinde, 
+                gerçek bir &quot;insan dokunuşu&quot; sunuyoruz.
               </p>
-              <p>
-                Bu &quot;insan dokunuşu&quot; yaklaşımı bizi rakiplerimizden ayıran temel felsefemizdir.
-              </p>
-            </motion.div>
-
-            {/* Timeline */}
-            <motion.div
-              className={styles.timeline}
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-            >
-              {MILESTONES.map((m, i) => (
-                <div key={m.year} className={styles.timelineItem}>
-                  <div className={styles.timelineDot} />
-                  {i < MILESTONES.length - 1 && <div className={styles.timelineLine} />}
-                  <div className={styles.timelineBody}>
-                    <span className={styles.timelineYear}>{m.year}</span>
-                    <h4>{m.label}</h4>
-                    <p>{m.desc}</p>
-                  </div>
-                </div>
-              ))}
             </motion.div>
           </div>
         </div>
@@ -207,9 +163,9 @@ export default function HakkimizdaPage() {
         <div className="container">
           <Section>
             <motion.div variants={fadeUp} className={styles.sectionHeader}>
-              <span className={styles.sectionLabel}>Ekibimiz</span>
-              <h2>Arkamızdaki İnsanlar</h2>
-              <p>Operasyon merkezimizin özünü oluşturan profesyoneller.</p>
+              <span className={styles.sectionLabel}>Kurucumuz</span>
+              <h2>Hizmetin Arkasındaki İsim</h2>
+              <p>Operasyon merkezimizin vizyonunu belirleyen liderimiz.</p>
             </motion.div>
             <div className={styles.teamGrid}>
               {TEAM.map(({ name, role, initial, color }) => (
@@ -243,10 +199,6 @@ export default function HakkimizdaPage() {
               <motion.a href="/rezervasyon" className="btn-primary"
                 whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                 Randevu Al <ArrowRight size={16} />
-              </motion.a>
-              <motion.a href="/hizmet-veren-ol" className={styles.ctaOutlineBtn}
-                whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
-                Ekibimize Katıl
               </motion.a>
             </div>
           </motion.div>

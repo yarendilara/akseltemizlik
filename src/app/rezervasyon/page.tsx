@@ -31,6 +31,10 @@ type BookingData = {
   phone: string;
   email: string;
   notes: string;
+  duration: 'FULL' | 'HALF';
+  teamSize: '1' | '2' | '3';
+  budgetRange: '2000-4000' | '4000-7000' | 'OTHER';
+  customBudget?: string;
 };
 
 const IconMap = {
@@ -45,6 +49,7 @@ function BookingFlowContent() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<Partial<BookingData>>({});
   const [isDistOpen, setIsDistOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   // Calendar States
   const [viewDate, setViewDate] = useState(new Date());
@@ -101,34 +106,45 @@ function BookingFlowContent() {
   }, [searchParams]);
 
   const handleFinalSubmit = () => {
-    const bookingId = `AKSEL-${Math.floor(Math.random() * 900000) + 100000}`;
-    const myBookings = JSON.parse(localStorage.getItem('aksel_bookings') || '[]');
-    
-    myBookings.push({
-      id: bookingId,
-      date: data.date,
-      time: data.time,
-      service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
-      status: 'SUBMITTED',
-      createdAt: new Date().toISOString()
-    });
-    
-    localStorage.setItem('aksel_bookings', JSON.stringify(myBookings));
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    const adminBookings = JSON.parse(localStorage.getItem('aksel_mock_bookings') || '[]');
-    adminBookings.push({
-      id: bookingId,
-      customer: data.name || "Bilinmiyor",
-      district: data.district || "Bilinmiyor",
-      service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : 'Belirtilmedi',
-      date: `${data.date} ${data.time}`,
-      status: 'SUBMITTED',
-      cleanerId: null
-    });
-    localStorage.setItem('aksel_mock_bookings', JSON.stringify(adminBookings));
+    // Simulate network delay
+    setTimeout(() => {
+      const bookingId = `AKSEL-${Math.floor(Math.random() * 900000) + 100000}`;
+      const myBookings = JSON.parse(localStorage.getItem('aksel_bookings') || '[]');
+      
+      myBookings.push({
+        id: bookingId,
+        date: data.date,
+        time: data.time,
+        service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
+        status: 'SUBMITTED',
+        createdAt: new Date().toISOString()
+      });
+      
+      localStorage.setItem('aksel_bookings', JSON.stringify(myBookings));
 
-    setData(prev => ({ ...prev, name: bookingId }));
-    setStep(6);
+      const adminBookings = JSON.parse(localStorage.getItem('aksel_mock_bookings') || '[]');
+      adminBookings.push({
+        id: bookingId,
+        customer: data.name || "Bilinmiyor",
+        phone: data.phone || "Belirtilmedi",
+        district: data.district || "Bilinmiyor",
+        service: data.serviceId ? (SERVICE_CONFIG as any)[data.serviceId].name : 'Belirtilmedi',
+        date: `${data.date} ${data.time}`,
+        budgetRange: data.budgetRange,
+        customBudget: data.customBudget,
+        duration: data.duration,
+        teamSize: data.teamSize,
+        status: 'SUBMITTED',
+      });
+      localStorage.setItem('aksel_mock_bookings', JSON.stringify(adminBookings));
+
+      setData(prev => ({ ...prev, name: bookingId })); // Reusing name field to hold ID for success screen
+      setStep(7);
+      setIsSubmitting(false);
+    }, 1200);
   };
 
   return (
@@ -136,7 +152,7 @@ function BookingFlowContent() {
       <div className="container">
         <div className={styles.bookingCard}>
           <div className={styles.progress}>
-            {[1, 2, 3, 4, 5].map(s => (
+            {[1, 2, 3, 4, 5, 6].map(s => (
               <div key={s} className={`${styles.dot} ${step >= s ? styles.done : ''} ${step === s ? styles.current : ''}`} />
             ))}
           </div>
@@ -212,6 +228,86 @@ function BookingFlowContent() {
                   case 2:
                     return (
                       <div className={styles.stepContent}>
+                        <h2>Hizmet Detayları</h2>
+                        
+                        <div className={styles.formGrid}>
+                          <div className={styles.inputGroup}>
+                            <label>Bütçe Aralığı</label>
+                            <div className={styles.optionGrid}>
+                              <button 
+                                className={`${styles.optionBtn} ${data.budgetRange === '2000-4000' ? styles.active : ''}`}
+                                onClick={() => updateData({ budgetRange: '2000-4000' })}
+                              >2 Bin - 4 Bin TL</button>
+                              <button 
+                                className={`${styles.optionBtn} ${data.budgetRange === '4000-7000' ? styles.active : ''}`}
+                                onClick={() => updateData({ budgetRange: '4000-7000' })}
+                              >4 Bin - 7 Bin TL</button>
+                              <button 
+                                className={`${styles.optionBtn} ${data.budgetRange === 'OTHER' ? styles.active : ''}`}
+                                onClick={() => updateData({ budgetRange: 'OTHER' })}
+                              >Diğer</button>
+                            </div>
+                            {data.budgetRange === 'OTHER' && (
+                              <div style={{ marginTop: '1rem' }}>
+                                <label>Teklifinizi Yazın</label>
+                                <input 
+                                  type="text" 
+                                  placeholder="Örn: 5500 TL"
+                                  value={data.customBudget || ''}
+                                  onChange={(e) => updateData({ customBudget: e.target.value })}
+                                />
+                              </div>
+                            )}
+                          </div>
+
+                          <div className={styles.inputGroup}>
+                            <label>Hizmet Süresi</label>
+                            <div className={styles.optionGrid}>
+                              <button 
+                                className={`${styles.optionBtn} ${data.duration === 'FULL' ? styles.active : ''}`}
+                                onClick={() => updateData({ duration: 'FULL' })}
+                              >Tam Gün</button>
+                              <button 
+                                className={`${styles.optionBtn} ${data.duration === 'HALF' ? styles.active : ''}`}
+                                onClick={() => updateData({ duration: 'HALF' })}
+                              >Yarım Gün</button>
+                            </div>
+                          </div>
+
+                          <div className={styles.inputGroup}>
+                            <label>Ekip Mevcudiyeti</label>
+                            <div className={styles.optionGrid}>
+                              <button 
+                                className={`${styles.optionBtn} ${data.teamSize === '1' ? styles.active : ''}`}
+                                onClick={() => updateData({ teamSize: '1' })}
+                              >1 Kişi</button>
+                              <button 
+                                className={`${styles.optionBtn} ${data.teamSize === '2' ? styles.active : ''}`}
+                                onClick={() => updateData({ teamSize: '2' })}
+                              >2 Kişi</button>
+                              <button 
+                                className={`${styles.optionBtn} ${data.teamSize === '3' ? styles.active : ''}`}
+                                onClick={() => updateData({ teamSize: '3' })}
+                              >3 Kişi</button>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className={styles.stepActions}>
+                          <button className={styles.backBtn} onClick={prevStep}>Geri</button>
+                          <button 
+                            className="btn-solid" 
+                            disabled={!data.budgetRange || !data.duration || !data.teamSize || (data.budgetRange === 'OTHER' && !data.customBudget)} 
+                            onClick={nextStep}
+                          >
+                            Adres Bilgilerine Geç
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  case 3:
+                    return (
+                      <div className={styles.stepContent}>
                         <h2>Detaylı Operasyonel Adres</h2>
                         <div className={styles.inputGroup}>
                           <label>Hizmet Verilecek Detaylı Adres</label>
@@ -242,7 +338,7 @@ function BookingFlowContent() {
                         </div>
                       </div>
                     );
-                  case 3:
+                  case 4:
                     return (
                       <div className={styles.stepContent}>
                         <h2>İş Takvimi ve Slotlar</h2>
@@ -316,7 +412,7 @@ function BookingFlowContent() {
                         </div>
                       </div>
                     );
-                  case 4:
+                  case 5:
                     return (
                       <div className={styles.stepContent}>
                         <h2>Müşteri Bilgileri</h2>
@@ -352,7 +448,7 @@ function BookingFlowContent() {
                         </div>
                       </div>
                     );
-                  case 5:
+                  case 6:
                     return (
                       <div className={styles.stepContent}>
                         <h2>Operasyonel Rezervasyon Özeti</h2>
@@ -365,6 +461,16 @@ function BookingFlowContent() {
                             <span>Hizmet Türü:</span>
                             <strong>{data.serviceId && SERVICE_CONFIG[data.serviceId].name}</strong>
                           </div>
+                          <div className={styles.summarySplit}>
+                            <div className={styles.summaryItem}>
+                              <span>Seçilen Paket:</span>
+                              <strong>{data.duration === 'FULL' ? 'Tam Gün' : 'Yarım Gün'}</strong>
+                            </div>
+                            <div className={styles.summaryItem}>
+                              <span>Ekip Boyutu:</span>
+                              <strong>{data.teamSize} Kişilik</strong>
+                            </div>
+                          </div>
                           <div className={styles.summaryItem}>
                             <span>Planlanan Zaman:</span>
                             <strong>{data.date} @ {data.time}</strong>
@@ -372,6 +478,10 @@ function BookingFlowContent() {
                           <div className={styles.summaryItem}>
                             <span>Bölge:</span>
                             <strong>{data.district} / İstanbul</strong>
+                          </div>
+                          <div className={styles.summaryItem}>
+                            <span>Bütçe Aralığı:</span>
+                            <strong>{data.budgetRange === 'OTHER' ? data.customBudget : (data.budgetRange === '2000-4000' ? '2.000 - 4.000 TL' : '4.000 - 7.000 TL')}</strong>
                           </div>
                           <div className={styles.summaryItem}>
                             <span>Adres:</span>
@@ -393,21 +503,31 @@ function BookingFlowContent() {
                           </div>
                         </div>
                         <div className={styles.stepActions}>
-                          <button className={styles.backBtn} onClick={prevStep}>Geri</button>
-                          <button className="btn-solid" onClick={handleFinalSubmit}>Randevu Talebini Gönder</button>
+                          <button className={styles.backBtn} disabled={isSubmitting} onClick={prevStep}>Geri</button>
+                          <button 
+                            className="btn-solid" 
+                            onClick={handleFinalSubmit}
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? 'Gönderiliyor...' : 'Randevu Talebini Gönder'}
+                          </button>
                         </div>
                       </div>
                     );
-                  case 6:
+                  case 7:
                     return (
                       <div className={styles.successScreen}>
                         <div className={styles.successIcon}>
                           <CheckCircle2 size={72} strokeWidth={1.2} />
                         </div>
-                        <h2>Randevu Talebiniz İletildi!</h2>
+                        <h2>Randevunuz İncelenmeye Alındı</h2>
                         <p>Talep No: <strong>{data.name}</strong></p>
-                        <p>Admin onayından sonra size SMS/E-posta ile bilgilendirme yapılacaktır.</p>
-                        <button className="btn-solid" onClick={() => window.location.href = '/'}>Ana Sayfaya Dön</button>
+                        <p>Talebiniz başarıyla operasyon merkezine iletildi. En kısa sürede size ulaşılacaktır.</p>
+                        <p style={{ marginTop: '0.5rem' }}>Bize "Randevularım" kısmından tüm randevularınızı takip edebilirsiniz.</p>
+                        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
+                          <button className="btn-solid" onClick={() => window.location.href = '/randevularim'}>Randevularıma Git</button>
+                          <button className="btn-primary" onClick={() => window.location.href = '/'}>Ana Sayfa</button>
+                        </div>
                       </div>
                     )
                   default:

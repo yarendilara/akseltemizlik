@@ -25,8 +25,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { title: "Dashboard", path: "/admin", icon: BarChart3 },
     { title: "Operasyon Takvimi", path: "/admin/takvim", icon: Calendar },
     { title: "Rezervasyonlar", path: "/admin/rezervasyonlar", icon: ClipboardList },
-    { title: "Temizlikçi Başvuruları", path: "/admin/basvurular", icon: UserPlus },
-    { title: "Temizlikçilerimiz", path: "/admin/temizlikciler", icon: UserRoundCheck },
     { title: "Müşteriler", path: "/admin/musteriler", icon: Users },
     { title: "Hizmet Yönetimi", path: "/admin/hizmetler", icon: Wrench },
     { title: "Ayarlar", path: "/admin/ayarlar", icon: Settings },
@@ -73,7 +71,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <header className={styles.header}>
           <div className={styles.searchBar}>
             <Search size={16} className={styles.searchIcon} />
-            <input type="text" placeholder="Rezervasyon, müşteri veya temizlikçi ara..." />
+            <input type="text" placeholder="Rezervasyon veya müşteri ara..." />
           </div>
           <div className={styles.headerActions}>
             <div className={styles.notification}>

@@ -502,6 +502,47 @@
   color: var(--text-primary);
 }
 
+.summarySplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.optionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.8rem;
+  width: 100%;
+}
+
+.optionBtn {
+  background: white;
+  border: 1.5px solid #E2E8F0;
+  padding: 1rem 0.5rem;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.optionBtn:hover {
+  border-color: var(--primary);
+  background: var(--primary-xlight);
+  color: var(--primary-dark);
+}
+
+.optionBtn.active {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+  font-weight: 600;
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+}
+
 .operationNote {
   margin-top: 2rem;
   padding: 1.5rem;

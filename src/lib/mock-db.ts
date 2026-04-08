@@ -161,22 +161,15 @@ export const addBooking = (bookingData: any) => {
   localStorage.setItem("aksel_mock_bookings", JSON.stringify(bookings));
 };
 
-export const assignBooking = (bookingId: number | string, cleanerId: number) => {
+export const updateBookingStatus = (bookingId: number | string, newStatus: string) => {
   const bookings = getBookings();
   const idx = bookings.findIndex((b: any) => b.id === bookingId);
   if (idx !== -1) {
-    bookings[idx].cleanerId = cleanerId;
-    bookings[idx].status = "ASSIGNED";
+    bookings[idx].status = newStatus;
     localStorage.setItem("aksel_mock_bookings", JSON.stringify(bookings));
-    
-    // Simulate Notification
-    const cleaners = getCleaners();
-    const cleaner = cleaners.find((c: any) => c.id === cleanerId);
-    if (cleaner) {
-        addNotification(cleanerId, `Yeni iş atandı: ${bookings[idx].service} - ${bookings[idx].district} ${bookings[idx].date}`);
-        console.log(`[EMAIL GÖNDERİLDİ] Alıcı: ${cleaner.email || 'Bilinmiyor'} - Konu: Yeni İş Ataması - Detaylar: ${bookings[idx].service} @ ${bookings[idx].date}`);
-    }
+    return true;
   }
+  return false;
 };
 
 export const getNotifications = (cleanerId: number) => {

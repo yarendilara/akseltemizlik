@@ -5,43 +5,37 @@ import {
   ClipboardList,
   FileDown,
   Eye,
-  Settings2,
   Search,
-  MoreVertical,
-  UserCheck
+  X,
+  Phone,
+  MessageCircle,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
 import { SecurityUtils } from '@/lib/security-utils';
 import { BOOKING_STATES } from '@/lib/constants';
-import { getBookings, getCleaners, assignBooking, syncClientBookings } from '@/lib/mock-db';
+import { getBookings, syncClientBookings, updateBookingStatus } from '@/lib/mock-db';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ReservationsAdmin() {
   const [resList, setResList] = useState<any[]>([]);
-  const [cleaners, setCleaners] = useState<any[]>([]);
-  const [loadingId, setLoadingId] = useState<string | number | null>(null);
-  const [assigningTo, setAssigningTo] = useState<string | number | null>(null);
-  const [selectedCleaner, setSelectedCleaner] = useState<number | ''>('');
+  const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
 
   useEffect(() => {
     syncClientBookings();
-    setResList(getBookings());
-    setCleaners(getCleaners());
+    loadData();
   }, []);
 
-  const handleStatusChange = (id: string | number) => {
-    setLoadingId(id);
-    setTimeout(() => {
-      // Find and assign booking
-      if (selectedCleaner) {
-        assignBooking(id as number, Number(selectedCleaner));
-        setResList(getBookings());
-        setAssigningTo(null);
-      } else {
-        alert("Lütfen bir temizlikçi seçin.");
-      }
-      setLoadingId(null);
-    }, 600);
+  const loadData = () => {
+    setResList(getBookings());
+  };
+
+  const handleStatusUpdate = (id: string | number, status: string) => {
+    updateBookingStatus(id, status);
+    loadData();
+    setSelectedBooking(null);
   };
 
   return (
@@ -84,8 +78,8 @@ export default function ReservationsAdmin() {
           <tbody>
             {resList.map((res: any, index: number) => (
               <tr key={res.id || index}>
-                <td><code style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>#{res.id ? (res.id.toString().startsWith("AKSEL") ? res.id : `AKSEL-${res.id + 101234}`) : `AKSEL-G${index}`}</code></td>
-                <td>{res.customer ? SecurityUtils.maskFullName(res.customer) : "Belirtilmedi"}</td>
+                <td><code style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>#{res.id || `AKSEL-G${index}`}</code></td>
+                <td>{res.customer}</td>
                 <td>{res.district || "Belirtilmedi"}</td>
                 <td>{res.service}</td>
                 <td>{res.date}</td>
@@ -96,52 +90,109 @@ export default function ReservationsAdmin() {
                   }}>
                     {((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).label}
                   </span>
-                  {res.cleanerId && <div style={{fontSize: '0.8rem', marginTop:'4px', color: 'var(--text-muted)'}}>Temizlikçi ID: {res.cleanerId}</div>}
                 </td>
                 <td>
-                  {assigningTo === res.id ? (
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <select value={selectedCleaner} onChange={(e) => setSelectedCleaner(Number(e.target.value))} style={{ padding:'4px', borderRadius:'4px', border:'1px solid var(--border)'}}>
-                               <option value="">Seçiniz...</option>
-                               {cleaners.map((c: any) => {
-                                   const bookingDatePart = res.date.split(' ')[0];
-                                   const isUnavailable = c.unavailableDates?.includes(bookingDatePart);
-                                   return (
-                                       <option key={c.id} value={c.id} disabled={isUnavailable}>
-                                           {c.name} {isUnavailable ? "(M müsait değil)" : ""}
-                                       </option>
-                                   );
-                               })}
-                            </select>
-                           <button className={styles.actionBtn} style={{ color: 'var(--accent-blue-hover)' }} onClick={() => handleStatusChange(res.id)} disabled={loadingId === res.id}>Ata</button>
-                           <button onClick={() => setAssigningTo(null)} style={{background:'none', border:'none', cursor:'pointer', color:'var(--danger)'}}>X</button>
-                      </div>
-                  ) : (
-                    <div style={{ display: 'flex', gap: '0.8rem' }}>
-                        <button className={styles.actionBtn} title="Detay">
-                          <Eye size={16} />
-                        </button>
-                        <button
-                          className={styles.actionBtn}
-                          style={{ color: 'var(--accent-blue-hover)' }}
-                          onClick={() => setAssigningTo(res.id)}
-                          title="Atama Yap"
-                        >
-                           <UserCheck size={16} />
-                        </button>
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', gap: '0.8rem' }}>
+                      <button 
+                        className={styles.actionBtn} 
+                        title="İncele/Detay"
+                        onClick={() => setSelectedBooking(res)}
+                      >
+                        <Eye size={16} /> <span style={{fontSize: '0.85rem'}}>Detay</span>
+                      </button>
+                  </div>
                 </td>
               </tr>
             ))}
-            {resList.length === 0 && (
-              <tr>
-                <td colSpan={7} style={{ textAlign: 'center', padding: '2rem' }}>Henüz aktif bir kayıt bulunamadı.</td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
+
+      <AnimatePresence>
+        {selectedBooking && (
+          <div className={styles.modalOverlay} onClick={() => setSelectedBooking(null)}>
+            <motion.div 
+              className={styles.modalContent} 
+              onClick={e => e.stopPropagation()}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            >
+              <div className={styles.modalHeader}>
+                <h3>Randevu Detayları</h3>
+                <button onClick={() => setSelectedBooking(null)} className={styles.closeBtn}><X size={20} /></button>
+              </div>
+              
+              <div className={styles.modalBody}>
+                <div className={styles.detailGrid}>
+                  <div className={styles.detailItem}>
+                    <label>ID</label>
+                    <p>{selectedBooking.id}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Durum</label>
+                    <p style={{ color: ((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).color }}>
+                      {((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).label}
+                    </p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Müşteri</label>
+                    <p>{selectedBooking.customer}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Telefon</label>
+                    <p>{selectedBooking.phone}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Hizmet</label>
+                    <p>{selectedBooking.service}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Bölge</label>
+                    <p>{selectedBooking.district}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Zaman</label>
+                    <p>{selectedBooking.date}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Bütçe</label>
+                    <p>{selectedBooking.budgetRange || selectedBooking.customBudget || "Belirtilmedi"}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>Süre / Ekip</label>
+                    <p>{selectedBooking.duration === 'FULL' ? 'Tam Gün' : 'Yarım Gün'} / {selectedBooking.teamSize} Kişi</p>
+                  </div>
+                </div>
+
+                <div className={styles.contactActions}>
+                   <a href={`tel:${selectedBooking.phone}`} className={styles.contactBtn}>
+                      <Phone size={16} /> Müşteriyi Ara
+                   </a>
+                   <a href={`https://wa.me/${selectedBooking.phone?.replace(/[^0-9]/g, '')}`} target="_blank" className={styles.contactBtn} style={{ background: '#25D366' }}>
+                      <MessageCircle size={16} /> WhatsApp'tan Yaz
+                   </a>
+                </div>
+
+                <div className={styles.modalFooter}>
+                  <button 
+                    className={styles.rejectBtn}
+                    onClick={() => handleStatusUpdate(selectedBooking.id, 'CANCELED')}
+                  >
+                    <XCircle size={16} /> Reddet / İptal Et
+                  </button>
+                  <button 
+                    className={styles.approveBtn}
+                    onClick={() => handleStatusUpdate(selectedBooking.id, 'CONFIRMED')}
+                  >
+                    <CheckCircle2 size={16} /> Randevuyu Onayla
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </AdminLayout>
   );
 }

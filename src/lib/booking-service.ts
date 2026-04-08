@@ -39,20 +39,16 @@ export class BookingService {
     const mockAdminBlocks = ["09:00", "16:00"]; // Admin bu sabahtan bir saati ve akşam bir saati bloklamış
 
     return timeSlots.map(time => {
-      const isBlockedByAdmin = mockAdminBlocks.includes(time);
-      const isBooked = this.isTimeOverlap(time, totalDuration, mockBookings);
-      const isBufferZone = false; // Detaylı lojik eklenebilir
-
-      let status: Slot['status'] = 'available';
-      if (isBlockedByAdmin) status = 'blocked_by_admin';
-      else if (isBooked) status = 'booked';
+      // Artık tüm slotlar müsait kabul ediliyor
+      const isAvailable = true;
+      const status: Slot['status'] = 'available';
 
       return {
         startTime: time,
         endTime: this.calculateEndTime(time, config.duration),
-        isAvailable: !isBlockedByAdmin && !isBooked,
+        isAvailable,
         status,
-        reason: isBlockedByAdmin ? "Admin Tarafından Kapalı" : (isBooked ? "Dolu" : undefined)
+        reason: undefined
       };
     });
   }

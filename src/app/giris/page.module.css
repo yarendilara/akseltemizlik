@@ -77,55 +77,21 @@
   font-weight: 600;
 }
 
-/* Slide Toggle */
-.toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #F0F9FF;
-  border-radius: var(--radius-full);
-  padding: 5px;
-  margin-bottom: 2rem;
-  position: relative;
-}
-
-.toggleSlider {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: calc(50% - 5px);
-  height: calc(100% - 10px);
-  background: #ffffff;
-  border-radius: var(--radius-full);
-  box-shadow: 0 2px 10px rgba(14, 165, 233, 0.15);
-  z-index: 0;
-}
-
-.toggleBtn {
-  position: relative;
-  z-index: 1;
+.adminIconWrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.7rem 0.5rem;
-  border-radius: var(--radius-full);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  transition: color 0.2s ease;
-  background: none;
-  border: none;
-  cursor: pointer;
+  margin: 1rem 0 2rem;
 }
 
-.toggleActive {
-  color: var(--primary-dark);
+.adminIcon {
+  color: var(--primary);
+  filter: drop-shadow(0 4px 12px rgba(14, 165, 233, 0.2));
 }
 
 /* Form area */
 .formArea {
-  min-height: 280px;
   position: relative;
+  min-height: 280px;
 }
 
 .form {

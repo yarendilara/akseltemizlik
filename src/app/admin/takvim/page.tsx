@@ -101,7 +101,7 @@ export default function CalendarAdmin() {
 
       <div className={styles.tableCard}>
         <div className={styles.cardHeader}>
-          <h3>Aktif Günler: Doluluk & Atama</h3>
+          <h3>Aktif Günler: Doluluk & Kapasite</h3>
           <button className={styles.actionBtn} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }} onClick={() => alert("Manuel bloklama ekranı açılıyor...")}>
             <Plus size={16} /> Yeni Manuel Blok
           </button>

@@ -5,7 +5,7 @@
 .dashHeader h1 {
   font-size: 2.2rem;
   margin-bottom: 0.5rem;
-  color: var(--white);
+  color: var(--text-primary);
 }
 
 .dashHeader p {
@@ -26,7 +26,15 @@
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
-  border: 1px solid rgba(100, 255, 218, 0.05);
+  border: 1px solid rgba(14, 165, 233, 0.05); /* Adjusted to primary color */
+  transition: all 0.3s ease;
+}
+
+.statCardActive {
+  border-color: var(--accent-blue);
+  background: var(--primary-xlight);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .statHeader {
@@ -169,7 +177,7 @@
 
 .appInfo p {
   font-size: 0.9rem;
-  color: var(--white);
+  color: var(--text-primary);
   font-weight: 600;
   margin-bottom: 0.3rem;
 }
@@ -193,10 +201,158 @@
 
 @media (max-width: 1200px) {
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
-  .mainGrid { grid-template-columns: 1fr; }
+  .mainGrid, .mainGridFull { grid-template-columns: 1fr; }
 }
 
-@media (max-width: 768px) {
-  .statsGrid { grid-template-columns: 1fr; }
-  .dashHeader h1 { font-size: 1.8rem; }
+.mainGridFull {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 12, 27, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+}
+
+.modalContent {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 600px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(100, 255, 218, 0.1);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.modalHeader {
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid rgba(100, 255, 218, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalHeader h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+}
+
+.closeBtn {
+  color: var(--text-secondary);
+  transition: color 0.2s;
+}
+
+.closeBtn:hover {
+  color: var(--accent-blue);
+}
+
+.modalBody {
+  padding: 2rem;
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.detailItem label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.5px;
+}
+
+.detailItem p {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.contactActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(100, 255, 218, 0.05);
+}
+
+.contactBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 0.8rem;
+  background: var(--accent-blue);
+  color: var(--bg-navy);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.contactBtn:hover {
+  opacity: 0.9;
+}
+
+.modalFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(100, 255, 218, 0.05);
+}
+
+.approveBtn, .rejectBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.approveBtn {
+  background: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.2);
+}
+
+.approveBtn:hover {
+  background: rgba(46, 204, 113, 0.2);
+}
+
+.rejectBtn {
+  background: rgba(231, 76, 60, 0.1);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+}
+
+.rejectBtn:hover {
+  background: rgba(231, 76, 60, 0.2);
+}
+
+@media (max-width: 600px) {
+  .detailGrid, .contactActions, .modalFooter {
+    grid-template-columns: 1fr;
+  }
 }
