@@ -2,8 +2,7 @@
 // Focus: Integrity, Performance (Indexes), and Constraints
 
 generator client {
-  provider   = "prisma-client-js"
-  engineType = "library"
+  provider = "prisma-client-js"
 }
 
 datasource db {
