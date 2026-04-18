@@ -1,17 +1,43 @@
 "use client";
 
+import { useState, useEffect } from 'react';
 import { User, History, Shield, Search, Users } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
 import { SecurityUtils } from '@/lib/security-utils';
 
-const CUSTOMERS = [
-  { id: 1, name: "Murat Kaçmaz", district: "Beşiktaş", phone: "0533-XXX-XX-XX", status: "Aktif" },
-  { id: 2, name: "Selma Gür", district: "Kadıköy", phone: "0532-XXX-XX-XX", status: "Aktif" },
-  { id: 3, name: "Ahmet Ergin", district: "Üsküdar", phone: "0540-XXX-XX-XX", status: "İncelemede" },
-];
-
 export default function CustomersAdmin() {
+  const [customers, setCustomers] = useState<any[]>([]);
+
+  useEffect(() => {
+    async function loadCustomers() {
+      try {
+        const resp = await fetch('/api/bookings');
+        const data = await resp.json();
+        if (Array.isArray(data)) {
+          // Deduplicate bookings by phone or name to create a unique customer list
+          const uniqueCustomers = new Map();
+          data.forEach(b => {
+             const identifier = b.customerPhone || b.customerName || b.customer || 'Bilinmiyor';
+             if (!uniqueCustomers.has(identifier)) {
+               uniqueCustomers.set(identifier, {
+                 id: b.id,
+                 name: b.customerName || b.customer || 'Bilinmeyen Müşteri',
+                 district: b.districtId || b.district || 'Belirtilmedi',
+                 phone: b.customerPhone || b.phone || 'Belirtilmedi',
+                 status: b.status === 'CANCELED' ? 'Pasif' : 'Aktif',
+               });
+             }
+          });
+          setCustomers(Array.from(uniqueCustomers.values()));
+        }
+      } catch(err) {
+        console.error("Error loading customers", err);
+      }
+    }
+    loadCustomers();
+  }, []);
+
   return (
     <AdminLayout>
       <div className={styles.dashHeader}>
@@ -42,7 +68,7 @@ export default function CustomersAdmin() {
             </tr>
           </thead>
           <tbody>
-            {CUSTOMERS.map((cust) => (
+            {customers.map((cust) => (
               <tr key={cust.id}>
                 <td><strong>{SecurityUtils.maskFullName(cust.name)}</strong></td>
                 <td>{cust.district}</td>

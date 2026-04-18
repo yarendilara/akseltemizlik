@@ -20,30 +20,38 @@ export default function CalendarAdmin() {
   const [totalJobs, setTotalJobs] = useState(0);
 
   useEffect(() => {
-    const bookings = getBookings();
-    setTotalJobs(bookings.length);
-    
-    // Group bookings by date (simple string match for now)
-    const grouped: any = {};
-    bookings.forEach((b: any) => {
-       const d = b.date.split(' ')[0]; // Extract just the date part
-       if (!grouped[d]) grouped[d] = { date: d, jobs: 0, slots: 15, status: "Normal" };
-       grouped[d].jobs += 1;
-       grouped[d].slots -= 1;
-       if (grouped[d].slots < 5) grouped[d].status = "Kritik";
-       if (grouped[d].slots <= 0) grouped[d].status = "Bloke";
-    });
-    
-    // Convert to array and handle empty state by providing some defaults if no bookings exist
-    let datesArr = Object.values(grouped);
-    if (datesArr.length === 0) {
-      datesArr = [
-         { date: "Bugün", jobs: 0, slots: 15, status: "Sakin" },
-         { date: "Yarın", jobs: 0, slots: 15, status: "Sakin" }
-      ];
+    async function loadCalendar() {
+      try {
+        const resp = await fetch('/api/bookings');
+        const data = await resp.json();
+        
+        if (Array.isArray(data)) {
+          setTotalJobs(data.length);
+          
+          const grouped: any = {};
+          data.forEach((b: any) => {
+             const d = (b.startAt ? new Date(b.startAt).toLocaleDateString('tr-TR') : b.date) || 'Bilinmeyen Tarih';
+             if (!grouped[d]) grouped[d] = { date: d, jobs: 0, slots: 15, status: "Normal" };
+             grouped[d].jobs += 1;
+             grouped[d].slots -= 1;
+             if (grouped[d].slots < 5) grouped[d].status = "Kritik";
+             if (grouped[d].slots <= 0) grouped[d].status = "Bloke";
+          });
+          
+          let datesArr = Object.values(grouped);
+          if (datesArr.length === 0) {
+            datesArr = [
+               { date: "Bugün", jobs: 0, slots: 15, status: "Sakin" },
+               { date: "Yarın", jobs: 0, slots: 15, status: "Sakin" }
+            ];
+          }
+          setDates(datesArr);
+        }
+      } catch (err) {
+        console.error("Calendar load error:", err);
+      }
     }
-    
-    setDates(datesArr);
+    loadCalendar();
   }, []);
 
   const handleDayDetail = (date: string) => {
