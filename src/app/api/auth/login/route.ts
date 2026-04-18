@@ -6,7 +6,7 @@ export async function POST(request: Request) {
     const { password } = await request.json();
 
     // Production environment should use environment variable for this
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "zinde2024";
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "Zinde!2024_Admin";
 
     if (password === ADMIN_PASSWORD) {
       // Set a secure session cookie
