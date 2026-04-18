@@ -98,7 +98,10 @@ model CleanerApplication {
 model Booking {
   id               String            @id @default(uuid())
   status           BookingStatus     @default(SUBMITTED)
-  customerId       String
+  customerId       String?
+  customerName     String
+  customerPhone    String
+  customerEmail    String
   serviceId        String
   districtId       String
   address          String

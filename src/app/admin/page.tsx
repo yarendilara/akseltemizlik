@@ -116,10 +116,10 @@ export default function AdminDashboard() {
             <tbody>
               {resList.map((res: any, index: number) => (
                 <tr key={res.id || index}>
-                  <td data-label="Müşteri">{res.customer}</td>
-                  <td data-label="İlçe">{res.district}</td>
-                  <td data-label="Hizmet">{res.service}</td>
-                  <td data-label="Zaman">{res.date}</td>
+                  <td data-label="Müşteri">{res.customerName || res.customer}</td>
+                  <td data-label="İlçe">{res.districtId || res.district}</td>
+                  <td data-label="Hizmet">{res.serviceId || res.service}</td>
+                  <td data-label="Zaman">{res.startAt ? new Date(res.startAt).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : res.date}</td>
                   <td data-label="Durum">
                     <span className={styles.statusBadge} style={{ 
                       background: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color + '22', 

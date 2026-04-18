@@ -12,14 +12,15 @@ export async function POST(request: Request) {
 
     const booking = await prisma.booking.create({
       data: {
+        customerName: data.name,
+        customerPhone: data.phone,
+        customerEmail: data.email,
         serviceId: data.serviceId,
         districtId: data.district,
         address: data.address,
         notes: data.notes || "",
-        // We'll store startAt as a combination of date and time
-        // Example date: 2024-03-24, time: 14:00
         startAt: new Date(`${data.date}T${data.time}:00`),
-        endAt: new Date(`${data.date}T${data.time}:00`), // For simplistic demo, start == end
+        endAt: new Date(`${data.date}T${data.time}:00`), 
         status: 'SUBMITTED',
       }
     });
