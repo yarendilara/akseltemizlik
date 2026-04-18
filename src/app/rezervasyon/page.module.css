@@ -171,8 +171,8 @@
   display: block;
 }
 
-.stepContent button.btn-solid {
-  margin-top: 4rem;
+.stepContent > button.btn-solid {
+  margin-top: 5.6rem;
   width: 100%;
   max-width: 280px;
 }
