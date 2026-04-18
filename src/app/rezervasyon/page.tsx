@@ -52,6 +52,7 @@ function BookingFlowContent() {
   const [data, setData] = useState<Partial<BookingData>>({});
   const [isDistOpen, setIsDistOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   
   // Calendar States
@@ -111,6 +112,7 @@ function BookingFlowContent() {
   const handleFinalSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
       const response = await fetch('/api/bookings', {
@@ -119,7 +121,13 @@ function BookingFlowContent() {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
+      const text = await response.text();
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (err) {
+        throw new Error("Sunucu geçersiz bir yanıt döndürdü (Muhtemelen bir hata oluştu).\nDetay: " + text.substring(0, 100));
+      }
 
       if (result.success) {
         // Still keep a local copy for the "My Bookings" page (which still reads from localstorage for now)
@@ -137,10 +145,10 @@ function BookingFlowContent() {
         setData(prev => ({ ...prev, name: result.bookingId.slice(0, 8).toUpperCase() })); 
         setStep(7);
       } else {
-        alert("Bir hata oluştu: " + result.error);
+        setSubmitError("Bir hata oluştu: " + result.error);
       }
-    } catch (error) {
-      alert("Sunucuyla iletişim kurulamadı.");
+    } catch (error: any) {
+      setSubmitError("Kayıt işlemi başarısız oldu: " + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -545,6 +553,12 @@ function BookingFlowContent() {
                               <p>Platform üzerinden online ödeme veya herhangi bir finansal işlem yapılamaz.</p>
                             </div>
                           </div>
+                          
+                          {submitError && (
+                            <div style={{ marginTop: '1rem', padding: '1rem', background: 'var(--danger-light)', borderLeft: '4px solid var(--danger)', color: 'var(--danger)', borderRadius: '4px', fontSize: '0.9rem' }}>
+                              {submitError}
+                            </div>
+                          )}
                         </div>
                         <div className={styles.stepActions}>
                           <button className={styles.backBtn} disabled={isSubmitting} onClick={prevStep}>Geri</button>
