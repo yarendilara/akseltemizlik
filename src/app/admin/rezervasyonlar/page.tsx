@@ -24,16 +24,23 @@ export default function ReservationsAdmin() {
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
 
   useEffect(() => {
-    syncClientBookings();
     loadData();
   }, []);
 
-  const loadData = () => {
-    setResList(getBookings());
+  const loadData = async () => {
+    const resp = await fetch('/api/bookings');
+    const data = await resp.json();
+    if (Array.isArray(data)) {
+      setResList(data);
+    }
   };
 
-  const handleStatusUpdate = (id: string | number, status: string) => {
-    updateBookingStatus(id, status);
+  const handleStatusUpdate = async (id: string | number, status: string) => {
+    await fetch('/api/bookings', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, status }),
+    });
     loadData();
     setSelectedBooking(null);
   };

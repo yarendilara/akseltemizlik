@@ -41,3 +41,16 @@ export async function GET() {
     return NextResponse.json({ error: "Randevular alınamadı." }, { status: 500 });
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const { id, status } = await request.json();
+    const booking = await prisma.booking.update({
+      where: { id },
+      data: { status }
+    });
+    return NextResponse.json({ success: true, booking });
+  } catch (error) {
+    return NextResponse.json({ error: "Durum güncellenemedi." }, { status: 500 });
+  }
+}

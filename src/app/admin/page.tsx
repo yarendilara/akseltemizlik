@@ -29,18 +29,34 @@ export default function AdminDashboard() {
     loadData();
   }, [filter]);
 
-  const loadData = () => {
-    let all = getBookings();
-    if (filter !== 'ALL') {
-      all = all.filter((b: any) => b.status === filter);
+  const loadData = async () => {
+    try {
+      const resp = await fetch('/api/bookings');
+      let all = await resp.json();
+      
+      if (Array.isArray(all)) {
+        if (filter !== 'ALL') {
+          all = all.filter((b: any) => b.status === filter);
+        }
+        setResList(all.slice(0, 10)); // Son 10 randevu (API zaten desc dönüyor)
+      }
+    } catch (err) {
+      console.error("Data load error:", err);
     }
-    setResList(all.slice(-10).reverse());
   };
 
-  const handleStatusUpdate = (id: string | number, status: string) => {
-    updateBookingStatus(id, status);
-    loadData();
-    setSelectedBooking(null);
+  const handleStatusUpdate = async (id: string | number, status: string) => {
+    try {
+      await fetch('/api/bookings', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      });
+      loadData();
+      setSelectedBooking(null);
+    } catch (err) {
+      alert("Güncelleme başarısız.");
+    }
   };
 
   const stats = [
