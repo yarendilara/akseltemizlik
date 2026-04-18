@@ -417,6 +417,7 @@ function BookingFlowContent() {
                         </div>
                       </div>
                     );
+                  case 5:
                     const validateCustomerInfo = () => {
                       const newErrors: Record<string, string> = {};
                       
