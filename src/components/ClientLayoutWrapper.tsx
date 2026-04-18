@@ -4,7 +4,6 @@ import { usePathname } from 'next/navigation';
 import { MessageCircle } from "lucide-react";
 import styles from "@/app/layout.module.css";
 import Navbar from "@/components/Navbar";
-import SplashLoader from "@/components/SplashLoader";
 
 export default function ClientLayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -16,7 +15,6 @@ export default function ClientLayoutWrapper({ children }: { children: React.Reac
 
   return (
     <>
-      <SplashLoader />
       <Navbar />
       {children}
       
