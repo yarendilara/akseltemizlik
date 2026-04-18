@@ -108,46 +108,42 @@ function BookingFlowContent() {
     }
   }, [searchParams]);
 
-  const handleFinalSubmit = () => {
+  const handleFinalSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
 
-    // Simulate network delay
-    setTimeout(() => {
-      const bookingId = `ZINDE-${Math.floor(Math.random() * 900000) + 100000}`;
-      const myBookings = JSON.parse(localStorage.getItem('zinde_bookings') || '[]');
-      
-      myBookings.push({
-        id: bookingId,
-        date: data.date,
-        time: data.time,
-        service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
-        status: 'SUBMITTED',
-        createdAt: new Date().toISOString()
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
       });
-      
-      localStorage.setItem('zinde_bookings', JSON.stringify(myBookings));
 
-      const adminBookings = JSON.parse(localStorage.getItem('zinde_mock_bookings') || '[]');
-      adminBookings.push({
-        id: bookingId,
-        customer: data.name || "Bilinmiyor",
-        phone: data.phone || "Belirtilmedi",
-        district: data.district || "Bilinmiyor",
-        service: data.serviceId ? (SERVICE_CONFIG as any)[data.serviceId].name : 'Belirtilmedi',
-        date: `${data.date} ${data.time}`,
-        budgetRange: data.budgetRange,
-        customBudget: data.customBudget,
-        duration: data.duration,
-        teamSize: data.teamSize,
-        status: 'SUBMITTED',
-      });
-      localStorage.setItem('zinde_mock_bookings', JSON.stringify(adminBookings));
+      const result = await response.json();
 
-      setData(prev => ({ ...prev, name: bookingId })); // Reusing name field to hold ID for success screen
-      setStep(7);
+      if (result.success) {
+        // Still keep a local copy for the "My Bookings" page (which still reads from localstorage for now)
+        const myBookings = JSON.parse(localStorage.getItem('zinde_bookings') || '[]');
+        myBookings.push({
+          id: result.bookingId.slice(0, 8).toUpperCase(), // Short ID for UI
+          date: data.date,
+          time: data.time,
+          service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
+          status: 'SUBMITTED',
+          createdAt: new Date().toISOString()
+        });
+        localStorage.setItem('zinde_bookings', JSON.stringify(myBookings));
+
+        setData(prev => ({ ...prev, name: result.bookingId.slice(0, 8).toUpperCase() })); 
+        setStep(7);
+      } else {
+        alert("Bir hata oluştu: " + result.error);
+      }
+    } catch (error) {
+      alert("Sunucuyla iletişim kurulamadı.");
+    } finally {
       setIsSubmitting(false);
-    }, 1200);
+    }
   };
 
   return (
