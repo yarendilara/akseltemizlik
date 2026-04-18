@@ -107,7 +107,7 @@ export default function Home() {
 
         {/* Floating bubbles */}
         <div className={styles.bubblesContainer}>
-          {Array.from({ length: 15 }).map((_, i) => {
+          {Array.from({ length: 36 }).map((_, i) => {
             const allImages = [
               '/images/cleaning_lady.png',
               '/images/foto1.jpg',
@@ -131,15 +131,12 @@ export default function Home() {
               '/images/office_cleaning.png'
             ];
             
-            // Assign images to bubbles. Some bubbles might be empty or use repeated images.
-            // We'll use a specific logic to spread them out.
             let backgroundImage = '';
             
-            // We have 28 slots and 17 images. 
-            // Let's populate roughly 75% of bubbles with images.
-            const hasImage = (i % 4 !== 3); // Skip every 4th bubble for some "air"
+            // Varied distribution: 50% have images, 50% are decorative glass bubbles
+            const hasImage = (i % 2 === 0);
             if (hasImage) {
-              const imgIndex = (i * 7) % allImages.length; // Use a seed-like approach to spread images
+              const imgIndex = (i * 13) % allImages.length; 
               backgroundImage = `url(${allImages[imgIndex]})`;
             }
 
