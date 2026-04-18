@@ -19,8 +19,11 @@ import { SecurityUtils } from '@/lib/security-utils';
 import { BOOKING_STATES } from '@/lib/constants';
 import { getBookings, updateBookingStatus } from '@/lib/mock-db';
 import { motion, AnimatePresence } from 'framer-motion';
+import confetti from 'canvas-confetti';
 
 export default function AdminDashboard() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [resList, setResList] = useState<any[]>([]);
   const [allBookings, setAllBookings] = useState<any[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
@@ -37,13 +40,39 @@ export default function AdminDashboard() {
       
       if (Array.isArray(all)) {
         setAllBookings(all);
+        
+        if (isInitialLoad) {
+           setIsInitialLoad(false);
+           const newCount = all.filter((b: any) => b.status === 'SUBMITTED').length;
+           
+           if (newCount > 0) {
+              // Havai fişek patlatma (eğer yeni randevu varsa)
+              const duration = 2.5 * 1000;
+              const animationEnd = Date.now() + duration;
+              const frame = () => {
+                confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#0EA5E9', '#FACC15'] });
+                confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#0EA5E9', '#FACC15'] });
+                if (Date.now() < animationEnd) { requestAnimationFrame(frame); }
+              };
+              frame();
+           } else {
+              // Ufak bir karşılama patlaması (yeni iş olmasa da moral için)
+              confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 }, colors: ['#94a3b8', '#cbd5e1'] });
+           }
+
+           setTimeout(() => {
+             setShowSplash(false);
+           }, 4000);
+        }
+
         if (filter !== 'ALL') {
           all = all.filter((b: any) => b.status === filter);
         }
-        setResList(all.slice(0, 10)); // Son 10 randevu (API zaten desc dönüyor)
+        setResList(all.slice(0, 10)); 
       }
     } catch (err) {
       console.error("Data load error:", err);
+      if (isInitialLoad) setTimeout(() => setShowSplash(false), 2000);
     }
   };
 
@@ -69,6 +98,55 @@ export default function AdminDashboard() {
   ];
 
   return (
+    <>
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+             initial={{ opacity: 1 }}
+             exit={{ opacity: 0, y: -50 }}
+             transition={{ duration: 0.6, ease: "easeInOut" }}
+             style={{
+               position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+               background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+               zIndex: 99999, display: 'flex', flexDirection: 'column',
+               justifyContent: 'center', alignItems: 'center', color: '#fff',
+             }}
+          >
+            <motion.h1 
+              initial={{ scale: 0.8, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', marginBottom: '1.5rem', textAlign: 'center', padding: '0 1rem' }}
+            >
+              Hoşgeldiniz Aysel Hanım ✨
+            </motion.h1>
+            {isInitialLoad ? (
+              <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1 }}>
+                 <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Sistem kontrol ediliyor...</p>
+              </motion.div>
+            ) : (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                style={{
+                  background: allBookings.filter(b => b.status === 'SUBMITTED').length > 0 ? 'rgba(52, 211, 153, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                  padding: '1rem 2rem', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.1)'
+                }}
+              >
+                <p style={{ 
+                    fontSize: '1.2rem', margin: 0,
+                    color: allBookings.filter(b => b.status === 'SUBMITTED').length > 0 ? '#34D399' : '#cbd5e1' 
+                }}>
+                  {allBookings.filter(b => b.status === 'SUBMITTED').length > 0 
+                    ? `Harika haber! Göz atmanızı bekleyen ${allBookings.filter(b => b.status === 'SUBMITTED').length} yeni randevunuz var.` 
+                    : "Şuanlık yeni randevular göremiyorum maalesef."}
+                </p>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+
     <AdminLayout>
       <div className={styles.dashHeader}>
         <h1>Operasyon Merkezi</h1>
@@ -231,5 +309,6 @@ export default function AdminDashboard() {
         )}
       </AnimatePresence>
     </AdminLayout>
+    </>
   );
 }
