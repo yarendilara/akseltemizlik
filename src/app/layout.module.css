@@ -1,19 +1,61 @@
-/* ─── Navbar ─── */
-.navbar {
+.headerWrapper {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 1000;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.headerScrolled {
+  transform: translateY(-40px);
+}
+
+.topBar {
+  background: #0369A1; /* Darker professional blue */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.topBarContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topLinks, .topSocials {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.topItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+.topItem:hover {
+  color: #fff;
+}
+
+.navbar {
+  width: 100%;
   height: 76px;
   display: flex;
   align-items: center;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(14, 165, 233, 0.12);
-  box-shadow: 0 2px 24px rgba(14, 165, 233, 0.08);
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 15px rgba(14, 165, 233, 0.08);
 }
 
 .navbarScrolled {
@@ -156,6 +198,29 @@
   color: rgba(255, 255, 255, 0.55);
   font-size: 0.9rem;
   line-height: 1.7;
+}
+
+.footerContact {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.footerContact p {
+  margin-top: 0 !important;
+  color: #fff !important;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem !important;
+}
+
+.footerContact p:last-child {
+  color: #38BDF8 !important;
+  font-weight: 500;
+  font-size: 0.85rem !important;
 }
 
 .footerBrand .logo {

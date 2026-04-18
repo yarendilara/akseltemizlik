@@ -1,0 +1,120 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #001a3d; /* More vibrant deep blue */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.bgGlow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, #033a75 0%, #001a3d 100%);
+  opacity: 0.9;
+}
+
+.bubblesLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(14, 165, 233, 0.1) 40%,
+    rgba(14, 165, 233, 0.05) 70%,
+    transparent 100%
+  );
+  border: 1.2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  box-shadow: 
+    inset -2px -2px 8px rgba(0, 0, 0, 0.1),
+    inset 2px 2px 8px rgba(255, 255, 255, 0.15);
+  will-change: transform, opacity;
+}
+
+.shine {
+  position: absolute;
+  top: 15%;
+  left: 15%;
+  width: 25%;
+  height: 25%;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  filter: blur(2px);
+}
+
+.content {
+  position: relative;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.logoText {
+  font-family: var(--font-heading);
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  display: flex;
+  gap: 1rem;
+  background: linear-gradient(135deg, #0284C7, #0EA5E9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.highlight {
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.revealElements {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.loadingBar {
+  width: 240px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8, #0ea5e9);
+  background-size: 200% auto;
+}
+
+.tagline {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .logoText {
+    font-size: 2.5rem;
+  }
+  .loadingBar {
+    width: 180px;
+  }
+}

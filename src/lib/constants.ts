@@ -1,5 +1,5 @@
 /**
- * Aksel Temizlik - Merkezi Operasyonel Sabitler
+ * Zinde Temizlik - Merkezi Operasyonel Sabitler
  */
 
 export const ISTANBUL_DISTRICTS = [
@@ -14,29 +14,41 @@ export const ISTANBUL_DISTRICTS = [
 ];
 
 export const SERVICE_CONFIG = {
+  "site-sosyal": {
+    name: "Site ve Sosyal Alan Temizliği",
+    duration: 480, // 8 saat
+    buffer: 60,
+    icon: "LayoutGrid"
+  },
+  "is-yeri-ofis": {
+    name: "İş Yeri Ofis Temizliği",
+    duration: 180, // 3 saat
+    buffer: 30,
+    icon: "Building2"
+  },
+  "insaat-sonrasi": {
+    name: "İnşaat Sonrası Temizlik",
+    duration: 360, // 6 saat
+    buffer: 60,
+    icon: "Sparkles"
+  },
   "bos-ev": {
     name: "Boş Ev Temizliği",
-    duration: 240, // Dakika (4 saat)
-    buffer: 60,    // Dakika (1 saat hazırlık/yol)
+    duration: 240, // 4 saat
+    buffer: 60,
     icon: "Home"
   },
-  "ofis": {
-    name: "Ofis Temizliği",
-    duration: 180, // Dakika (3 saat)
-    buffer: 30,    // Dakika
-    icon: "Building2"
+  "apartman": {
+    name: "Apartman Temizliği",
+    duration: 180,
+    buffer: 30,
+    icon: "Layers"
   },
   "merdiven": {
     name: "Merdiven Temizliği",
-    duration: 120, // Dakika (2 saat)
-    buffer: 30,    // Dakika
+    duration: 120,
+    buffer: 30,
     icon: "Layers"
-  },
-  "site": {
-    name: "Site Temizliği",
-    duration: 480, // Dakika (8 saat - Tam gün)
-    buffer: 60,    // Dakika
-    icon: "LayoutGrid"
   }
 };
 

@@ -1,5 +1,5 @@
 /**
- * Aksel Temizlik - Real Server-Side Auth Integration (NextAuth.js Pattern)
+ * Zinde Temizlik - Real Server-Side Auth Integration (NextAuth.js Pattern)
  * Kimlik ve roller artık doğrudan sunucu oturumundan (session) çözümlenir.
  */
 

@@ -47,7 +47,7 @@ const VALUES = [
 ];
 
 const TEAM = [
-  { name: 'Ayselto', role: 'İşletme Kurucusu', initial: 'A', color: '#F97316' },
+  { name: 'Aysel Arslan', role: 'İşletme Kurucusu', initial: 'A', color: '#F97316' },
 ];
 
 const MILESTONES = [
@@ -122,7 +122,7 @@ export default function HakkimizdaPage() {
               <span className={styles.sectionLabel}>Misyonumuz</span>
               <h2>Güvenilir ve Kaliteli Temizlik</h2>
               <p>
-                Aksel Temizlik, İstanbul&apos;da yaşayan insanların güvenilir, şeffaf ve 
+                Zinde Temizlik, İstanbul&apos;da yaşayan insanların güvenilir, şeffaf ve 
                 gerçekten kaliteli bir temizlik hizmeti alabilmesi amacıyla kuruldu. 
                 Sektördeki boşluğu, insan odaklı hizmet anlayışımızla dolduruyoruz.
               </p>
@@ -193,7 +193,7 @@ export default function HakkimizdaPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2>Siz de Aksel Ailesinin Bir Parçası Olun</h2>
+            <h2>Siz de Zinde Ailesinin Bir Parçası Olun</h2>
             <p>İlk randevunuzu şimdi alın, farkı kendiniz hissedin.</p>
             <div className={styles.ctaBtns}>
               <motion.a href="/rezervasyon" className="btn-primary"

@@ -47,7 +47,7 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <a href="/" className={styles.logo}>
-          AKSEL<span className={styles.logoOrange}>TEMİZLİK</span>
+          ZİNDE<span className={styles.logoOrange}>TEMİZLİK</span>
         </a>
 
         <p className={styles.tagline}>Yönetim Paneli</p>

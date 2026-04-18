@@ -13,6 +13,7 @@ import {
   Building2,
   Layers,
   LayoutGrid,
+  Sparkles,
   ChevronLeft,
   ChevronRight,
   X
@@ -41,7 +42,8 @@ const IconMap = {
   Home,
   Building2,
   Layers,
-  LayoutGrid
+  LayoutGrid,
+  Sparkles
 };
 
 function BookingFlowContent() {
@@ -111,8 +113,8 @@ function BookingFlowContent() {
 
     // Simulate network delay
     setTimeout(() => {
-      const bookingId = `AKSEL-${Math.floor(Math.random() * 900000) + 100000}`;
-      const myBookings = JSON.parse(localStorage.getItem('aksel_bookings') || '[]');
+      const bookingId = `ZINDE-${Math.floor(Math.random() * 900000) + 100000}`;
+      const myBookings = JSON.parse(localStorage.getItem('zinde_bookings') || '[]');
       
       myBookings.push({
         id: bookingId,
@@ -123,9 +125,9 @@ function BookingFlowContent() {
         createdAt: new Date().toISOString()
       });
       
-      localStorage.setItem('aksel_bookings', JSON.stringify(myBookings));
+      localStorage.setItem('zinde_bookings', JSON.stringify(myBookings));
 
-      const adminBookings = JSON.parse(localStorage.getItem('aksel_mock_bookings') || '[]');
+      const adminBookings = JSON.parse(localStorage.getItem('zinde_mock_bookings') || '[]');
       adminBookings.push({
         id: bookingId,
         customer: data.name || "Bilinmiyor",
@@ -139,7 +141,7 @@ function BookingFlowContent() {
         teamSize: data.teamSize,
         status: 'SUBMITTED',
       });
-      localStorage.setItem('aksel_mock_bookings', JSON.stringify(adminBookings));
+      localStorage.setItem('zinde_mock_bookings', JSON.stringify(adminBookings));
 
       setData(prev => ({ ...prev, name: bookingId })); // Reusing name field to hold ID for success screen
       setStep(7);
@@ -230,65 +232,71 @@ function BookingFlowContent() {
                       <div className={styles.stepContent}>
                         <h2>Hizmet Detayları</h2>
                         
-                        <div className={styles.formGrid}>
-                          <div className={styles.inputGroup}>
-                            <label>Bütçe Aralığı</label>
-                            <div className={styles.optionGrid}>
-                              <button 
-                                className={`${styles.optionBtn} ${data.budgetRange === '2000-4000' ? styles.active : ''}`}
-                                onClick={() => updateData({ budgetRange: '2000-4000' })}
-                              >2 Bin - 4 Bin TL</button>
-                              <button 
-                                className={`${styles.optionBtn} ${data.budgetRange === '4000-7000' ? styles.active : ''}`}
-                                onClick={() => updateData({ budgetRange: '4000-7000' })}
-                              >4 Bin - 7 Bin TL</button>
-                              <button 
-                                className={`${styles.optionBtn} ${data.budgetRange === 'OTHER' ? styles.active : ''}`}
-                                onClick={() => updateData({ budgetRange: 'OTHER' })}
-                              >Diğer</button>
-                            </div>
-                            {data.budgetRange === 'OTHER' && (
-                              <div style={{ marginTop: '1rem' }}>
-                                <label>Teklifinizi Yazın</label>
-                                <input 
-                                  type="text" 
-                                  placeholder="Örn: 5500 TL"
-                                  value={data.customBudget || ''}
-                                  onChange={(e) => updateData({ customBudget: e.target.value })}
-                                />
+                        <div className={styles.detailGrid}>
+                          <div className={styles.detailCard}>
+                            <div className={styles.inputGroup}>
+                              <label>Bütçe Aralığı</label>
+                              <div className={styles.optionGrid}>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.budgetRange === '2000-4000' ? styles.active : ''}`}
+                                  onClick={() => updateData({ budgetRange: '2000-4000' })}
+                                >2 Bin - 4 Bin TL</button>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.budgetRange === '4000-7000' ? styles.active : ''}`}
+                                  onClick={() => updateData({ budgetRange: '4000-7000' })}
+                                >4 Bin - 7 Bin TL</button>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.budgetRange === 'OTHER' ? styles.active : ''}`}
+                                  onClick={() => updateData({ budgetRange: 'OTHER' })}
+                                >Diğer</button>
                               </div>
-                            )}
-                          </div>
-
-                          <div className={styles.inputGroup}>
-                            <label>Hizmet Süresi</label>
-                            <div className={styles.optionGrid}>
-                              <button 
-                                className={`${styles.optionBtn} ${data.duration === 'FULL' ? styles.active : ''}`}
-                                onClick={() => updateData({ duration: 'FULL' })}
-                              >Tam Gün</button>
-                              <button 
-                                className={`${styles.optionBtn} ${data.duration === 'HALF' ? styles.active : ''}`}
-                                onClick={() => updateData({ duration: 'HALF' })}
-                              >Yarım Gün</button>
+                              {data.budgetRange === 'OTHER' && (
+                                <div style={{ marginTop: '0.5rem' }}>
+                                  <label>Teklifinizi Yazın</label>
+                                  <input 
+                                    type="text" 
+                                    placeholder="Örn: 5500 TL"
+                                    value={data.customBudget || ''}
+                                    onChange={(e) => updateData({ customBudget: e.target.value })}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
 
-                          <div className={styles.inputGroup}>
-                            <label>Ekip Mevcudiyeti</label>
-                            <div className={styles.optionGrid}>
-                              <button 
-                                className={`${styles.optionBtn} ${data.teamSize === '1' ? styles.active : ''}`}
-                                onClick={() => updateData({ teamSize: '1' })}
-                              >1 Kişi</button>
-                              <button 
-                                className={`${styles.optionBtn} ${data.teamSize === '2' ? styles.active : ''}`}
-                                onClick={() => updateData({ teamSize: '2' })}
-                              >2 Kişi</button>
-                              <button 
-                                className={`${styles.optionBtn} ${data.teamSize === '3' ? styles.active : ''}`}
-                                onClick={() => updateData({ teamSize: '3' })}
-                              >3 Kişi</button>
+                          <div className={styles.detailCard}>
+                            <div className={styles.inputGroup}>
+                              <label>Hizmet Süresi</label>
+                              <div className={styles.optionGrid}>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.duration === 'FULL' ? styles.active : ''}`}
+                                  onClick={() => updateData({ duration: 'FULL' })}
+                                >Tam Gün</button>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.duration === 'HALF' ? styles.active : ''}`}
+                                  onClick={() => updateData({ duration: 'HALF' })}
+                                >Yarım Gün</button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className={styles.detailCard}>
+                            <div className={styles.inputGroup}>
+                              <label>Ekip Mevcudiyeti</label>
+                              <div className={styles.optionGrid}>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.teamSize === '1' ? styles.active : ''}`}
+                                  onClick={() => updateData({ teamSize: '1' })}
+                                >1 Kişi</button>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.teamSize === '2' ? styles.active : ''}`}
+                                  onClick={() => updateData({ teamSize: '2' })}
+                                >2 Kişi</button>
+                                <button 
+                                  className={`${styles.optionBtn} ${data.teamSize === '3' ? styles.active : ''}`}
+                                  onClick={() => updateData({ teamSize: '3' })}
+                                >3 Kişi</button>
+                              </div>
                             </div>
                           </div>
                         </div>

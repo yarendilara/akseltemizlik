@@ -90,15 +90,15 @@ export default function ServicesAdmin() {
                   </div>
               </div>
               
-              <h4 style={{ color: 'var(--white)', marginBottom: '0.8rem', fontSize: '1.25rem' }}>{s.name}</h4>
+              <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.8rem', fontSize: '1.25rem' }}>{s.name}</h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><Hourglass size={14}/> Öngörülen Süre:</span>
-                  <strong style={{ color: 'var(--white)' }}>{s.duration / 60} Saat ({s.duration} dk)</strong>
+                  <strong style={{ color: 'var(--text-secondary)' }}>{s.duration / 60} Saat ({s.duration} dk)</strong>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Tampon (Hazırlık):</span>
-                  <strong style={{ color: 'var(--white)' }}>{s.buffer} dk</strong>
+                  <strong style={{ color: 'var(--text-secondary)' }}>{s.buffer} dk</strong>
                 </div>
               </div>
               <button 
@@ -137,7 +137,7 @@ export default function ServicesAdmin() {
               <div style={{ background: 'var(--bg-card)', padding: '30px', borderRadius: '16px', border: '1px solid var(--border)', maxWidth: '500px', width: '100%' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                       <h2 style={{ fontSize: '1.5rem' }}>{editingId ? "Hizmeti Güncelle" : "Yeni Hizmet Ekle"}</h2>
-                      <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X /></button>
+                       <button onClick={() => setShowModal(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}><X /></button>
                   </div>
                   
                   <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
@@ -149,7 +149,7 @@ export default function ServicesAdmin() {
                             onChange={e => setFormData({...formData, name: e.target.value})}
                             required
                             placeholder="Örn: Derin Mutfak Temizliği"
-                            style={{ width: '100%', padding: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white' }}
+                            style={{ width: '100%', padding: '12px', background: 'var(--bg-light)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }}
                           />
                       </div>
 
@@ -161,7 +161,7 @@ export default function ServicesAdmin() {
                                 value={formData.duration} 
                                 onChange={e => setFormData({...formData, duration: Number(e.target.value)})}
                                 required
-                                style={{ width: '100%', padding: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white' }}
+                                style={{ width: '100%', padding: '12px', background: 'var(--bg-light)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }}
                               />
                               <span style={{ fontSize: '11px', color: 'var(--accent-blue)', marginTop: '5px', display: 'block' }}>~{formData.duration / 60} saat sürer.</span>
                           </div>
@@ -172,7 +172,7 @@ export default function ServicesAdmin() {
                                 value={formData.buffer} 
                                 onChange={e => setFormData({...formData, buffer: Number(e.target.value)})}
                                 required
-                                style={{ width: '100%', padding: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white' }}
+                                style={{ width: '100%', padding: '12px', background: 'var(--bg-light)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }}
                               />
                           </div>
                       </div>
@@ -182,7 +182,7 @@ export default function ServicesAdmin() {
                           <select 
                             value={formData.icon} 
                             onChange={e => setFormData({...formData, icon: e.target.value})}
-                            style={{ width: '100%', padding: '12px', background: 'var(--bg-input)', border: '1px solid var(--border)', borderRadius: '8px', color: 'white' }}
+                            style={{ width: '100%', padding: '12px', background: 'var(--bg-light)', border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', color: 'var(--text-primary)' }}
                           >
                               <option value="Home">Ev (Home)</option>
                               <option value="Building2">Ofis (Building)</option>

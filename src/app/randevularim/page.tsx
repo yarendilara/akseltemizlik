@@ -42,7 +42,7 @@ export default function MyBookings() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('aksel_bookings');
+    const saved = localStorage.getItem('zinde_bookings');
     if (saved) {
       setBookings(
         JSON.parse(saved).sort((a: Booking, b: Booking) =>
@@ -206,10 +206,28 @@ export default function MyBookings() {
                               </span>
                             </div>
                           </div>
-                          <p className={styles.detailNote}>
-                            Randevu durumu hakkında bilgi almak için randevu numaranızı operasyon merkezimizle paylaşabilirsiniz.
-                          </p>
-                        </div>
+                           <div className={styles.actionRow}>
+                             <a 
+                               href={`https://wa.me/905465959280?text=Merhaba, ${booking.id} numaralı randevumu iptal etmek istiyorum.`}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className={styles.cancelBtn}
+                             >
+                               Randevuyu İptal Et
+                             </a>
+                             <a 
+                               href={`https://wa.me/905465959280?text=Merhaba, ${booking.id} numaralı randevumun saatini değiştirmek istiyorum.`}
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               className={styles.rescheduleBtn}
+                             >
+                               Saati Değiştir
+                             </a>
+                           </div>
+                           <p className={styles.detailNote}>
+                             Randevu iptali veya değişiklik işlemleri için operasyon merkezimizle WhatsApp üzerinden iletişime geçebilirsiniz.
+                           </p>
+                         </div>
                       </motion.div>
                     )}
                   </AnimatePresence>

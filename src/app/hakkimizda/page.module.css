@@ -416,6 +416,23 @@
   flex-wrap: wrap;
 }
 
+.founderImgWrapper {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 2.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #fff;
+  box-shadow: 0 12px 24px rgba(14, 165, 233, 0.2);
+  background: #fff;
+}
+
+.founderImgWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .teamCard {
   background: var(--bg-white, #fff);
   border: 1px solid #E2E8F0;
@@ -449,10 +466,11 @@
   margin-bottom: 4px;
 }
 
-.teamCard p {
-  font-size: 0.8rem;
-  color: var(--text-secondary, #64748B);
-  line-height: 1.5;
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 /* ── CTA ── */

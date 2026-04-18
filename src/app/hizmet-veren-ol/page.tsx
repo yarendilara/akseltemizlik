@@ -80,7 +80,7 @@ export default function BecomeCleaner() {
             className={styles.header}
           >
             <span className={styles.badge}>Başvuru Süreci</span>
-            <h1>Aksel Ailesine Katılın</h1>
+            <h1>Zinde Ailesine Katılın</h1>
             <p>
               Operasyon ekibimizde yer almak için sadece form doldurarak başvurunuzu yapabilirsiniz. 
               Hesabınız sadece admin onayından sonra oluşturulacaktır.

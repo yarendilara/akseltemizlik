@@ -211,8 +211,50 @@
   line-height: 1.5;
 }
 
+.actionRow {
+  display: flex;
+  gap: 1rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.cancelBtn, .rescheduleBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.cancelBtn {
+  background: #ffffff;
+  color: #DC2626;
+  border: 1.5px solid #DC2626;
+}
+
+.cancelBtn:hover {
+  background: #FEF2F2;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.rescheduleBtn {
+  background: var(--primary);
+  color: #ffffff;
+  border: 1.5px solid var(--primary);
+}
+
+.rescheduleBtn:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+}
+
 @media (max-width: 640px) {
   .detailGrid { grid-template-columns: 1fr 1fr; }
+  .actionRow { flex-direction: column; }
 }
 
 .emptyState {

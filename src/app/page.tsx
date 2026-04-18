@@ -27,6 +27,7 @@ const IconMap = {
   Building2: Building2,
   Layers: Layers,
   LayoutGrid: LayoutGrid,
+  Sparkles: Sparkles,
 };
 
 /* ─── Animated counter hook ─── */
@@ -106,31 +107,38 @@ export default function Home() {
 
         {/* Floating bubbles */}
         <div className={styles.bubblesContainer}>
-          {Array.from({ length: 28 }).map((_, i) => {
+          {Array.from({ length: 15 }).map((_, i) => {
+            const allImages = [
+              '/images/cleaning_lady.png',
+              '/images/download-1.jpg',
+              '/images/download-2.jpg',
+              '/images/download-3.jpg',
+              '/images/download-4.jpg',
+              '/images/download-5.jpg',
+              '/images/download-6.jpg',
+              '/images/download.jpg',
+              '/images/empty_house_clean.png',
+              '/images/images-1.jpg',
+              '/images/images-2.jpg',
+              '/images/images-3.jpg',
+              '/images/images-4.jpg',
+              '/images/images-5.jpg',
+              '/images/images-6.jpg',
+              '/images/images.jpg',
+              '/images/office_cleaning.png'
+            ];
+            
+            // Assign images to bubbles. Some bubbles might be empty or use repeated images.
+            // We'll use a specific logic to spread them out.
             let backgroundImage = '';
             
-            // Mapping new images to various bubbles
-            const imgMap: Record<number, string> = {
-              0: '/images/download.jpg',
-              2: '/images/empty_house_clean.png',
-              4: '/images/download-1.jpg',
-              6: '/images/cleaning_lady.png',
-              8: '/images/download-2.jpg',
-              10: '/images/images.jpg',
-              12: '/images/download-3.jpg',
-              14: '/images/images-1.jpg',
-              15: '/images/office_cleaning.png',
-              17: '/images/images-2.jpg',
-              19: '/images/download-4.jpg',
-              21: '/images/images-3.jpg',
-              22: '/images/empty_house_clean.png',
-              24: '/images/cleaning_lady.png',
-              25: '/images/download-5.jpg',
-              26: '/images/images-4.jpg',
-              27: '/images/download-6.jpg'
-            };
-
-            if (imgMap[i]) backgroundImage = `url(${imgMap[i]})`;
+            // We have 28 slots and 17 images. 
+            // Let's populate roughly 75% of bubbles with images.
+            const hasImage = (i % 4 !== 3); // Skip every 4th bubble for some "air"
+            if (hasImage) {
+              const imgIndex = (i * 7) % allImages.length; // Use a seed-like approach to spread images
+              backgroundImage = `url(${allImages[imgIndex]})`;
+            }
 
             return (
               <div 
@@ -289,6 +297,24 @@ export default function Home() {
             <span className={styles.sectionLabel}>Neden Biz?</span>
             <h2>Güven, Kalite, Uzmanlık</h2>
             <p>Her randevuyu operasyon ekibimiz birebir yönetir — otomasyon değil, gerçek uzmanlık.</p>
+            
+            <motion.div 
+              className={styles.sectionVideoWrapper}
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
+              <video 
+                src="/assets/zinde_video.mp4" 
+                controls 
+                autoPlay 
+                muted 
+                loop 
+                playsInline
+                className={styles.sectionVideo}
+              />
+            </motion.div>
           </motion.div>
 
           <motion.div
@@ -314,6 +340,20 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
+
+      {/* ═══ INTERMEDIATE IMAGE ═══ */}
+      <div className={styles.interImageContainer}>
+        <div className="container">
+          <motion.div 
+            className={styles.fullWidthImage}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <img src="/images/foto1.jpg" alt="Zinde Temizlik Süreci" />
+          </motion.div>
+        </div>
+      </div>
 
       {/* ═══ HOW IT WORKS ═══ */}
       <section className={styles.howItWorks}>
@@ -426,11 +466,11 @@ export default function Home() {
             {[
               {
                 q: 'Ödeme nasıl tahsil ediliyor?',
-                a: 'Platform üzerinden online ödeme veya finansal işlem yapılmamaktadır. Hizmet sonrasında operasyon sorumlusu ile iletişime geçilir.',
+                a: 'Platform üzerinden online ödeme veya finansal işlem yapılmamaktadır. Hizmet sonrasında operasyon sorumlumuz (+90 546 595 92 80) ile iletişime geçilir.',
               },
               {
                 q: 'Hizmet verenler kim?',
-                a: 'Aksel sistemine sadece başvurusu onaylanan, adli sicil ve referans kontrolünden geçen uzmanlar dahil olabilir.',
+                a: 'Zinde sistemine sadece başvurusu onaylanan, adli sicil ve referans kontrolünden geçen uzmanlar dahil olabilir.',
               },
               {
                 q: 'Hangi ilçelerde hizmet veriyorsunuz?',
@@ -438,7 +478,7 @@ export default function Home() {
               },
               {
                 q: 'Randevumu nasıl iptal edebilirim?',
-                a: '"Randevularım" sayfasından mevcut randevunuzu görüntüleyebilir ve iptal talebinde bulunabilirsiniz.',
+                a: 'Randevu iptali veya saat değişikliği işlemleri için WhatsApp destek hattımız (+90 546 595 92 80) üzerinden randevu numaranızla birlikte bizimle iletişime geçebilirsiniz.',
               },
             ].map(({ q, a }) => (
               <motion.div key={q} variants={itemVariants} className={styles.faqItem}>
@@ -457,23 +497,28 @@ export default function Home() {
       <section className={styles.ctaSection}>
         <div className="container">
           <motion.div
-            className={styles.ctaInner}
+            className={styles.ctaContentWrapper}
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <h2>Temiz Bir Başlangıç Sadece 1 Tık Uzakta</h2>
-            <p>Hemen randevu alın, uzman ekibimiz kapınıza gelsin. İstanbul&apos;un her köşesinde hizmetinizdeyiz.</p>
-            <div className={styles.ctaBtns}>
-              <motion.a
-                href="/rezervasyon"
-                className="btn-primary"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.97 }}
-              >
-                Hemen Randevu Al <ArrowRight size={18} />
-              </motion.a>
+            <div className={styles.ctaImgSide}>
+              <img src="/images/foto2.jpg" alt="Temizlik Başlangıcı" />
+            </div>
+            <div className={styles.ctaInner}>
+              <h2>Temiz Bir Başlangıç Sadece 1 Tık Uzakta</h2>
+              <p>Hemen randevu alın, uzman ekibimiz kapınıza gelsin. İstanbul&apos;un her köşesinde hizmetinizdeyiz.</p>
+              <div className={styles.ctaBtns}>
+                <motion.a
+                  href="/rezervasyon"
+                  className="btn-primary"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  Hemen Randevu Al <ArrowRight size={18} />
+                </motion.a>
+              </div>
             </div>
           </motion.div>
         </div>
