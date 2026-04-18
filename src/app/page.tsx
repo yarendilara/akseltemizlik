@@ -110,6 +110,9 @@ export default function Home() {
           {Array.from({ length: 15 }).map((_, i) => {
             const allImages = [
               '/images/cleaning_lady.png',
+              '/images/foto1.jpg',
+              '/images/foto2.jpg',
+              '/images/foto3.jpg',
               '/images/download-1.jpg',
               '/images/download-2.jpg',
               '/images/download-3.jpg',
