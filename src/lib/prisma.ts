@@ -12,7 +12,7 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const pool = new Pool({ connectionString });
-const adapter = new PrismaNeon(pool) as any;
+const adapter = new PrismaNeon(pool as any);
 
 export const prisma =
   globalForPrisma.prisma ??
