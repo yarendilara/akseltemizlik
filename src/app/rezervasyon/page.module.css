@@ -158,6 +158,19 @@
   box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
 
+.inputError {
+  border-color: var(--error) !important;
+  background-color: #FFF5F5 !important;
+}
+
+.errorText {
+  color: var(--error);
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: -0.6rem;
+  display: block;
+}
+
 .stepContent button.btn-solid {
   margin-top: 2.5rem;
   width: 100%;

@@ -52,6 +52,7 @@ function BookingFlowContent() {
   const [data, setData] = useState<Partial<BookingData>>({});
   const [isDistOpen, setIsDistOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   
   // Calendar States
   const [viewDate, setViewDate] = useState(new Date());
@@ -420,7 +421,36 @@ function BookingFlowContent() {
                         </div>
                       </div>
                     );
-                  case 5:
+                    const validateCustomerInfo = () => {
+                      const newErrors: Record<string, string> = {};
+                      
+                      // Name check
+                      if (!data.name || data.name.length < 3) {
+                        newErrors.name = "Lütfen geçerli bir ad soyad giriniz.";
+                      }
+
+                      // Phone check (Turkish format: 5xx xxx xx xx)
+                      const cleanPhone = data.phone?.replace(/[^0-9]/g, '') || '';
+                      if (!cleanPhone.match(/^5[0-9]{9}$/) && !cleanPhone.match(/^05[0-9]{9}$/)) {
+                        newErrors.phone = "Geçerli bir Türkiye telefon numarası giriniz (5xx...). ";
+                      }
+
+                      // Email check
+                      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                      if (!data.email || !emailRegex.test(data.email)) {
+                        newErrors.email = "Geçerli bir e-posta adresi giriniz.";
+                      }
+
+                      setErrors(newErrors);
+                      return Object.keys(newErrors).length === 0;
+                    };
+
+                    const handleCustomerSubmit = () => {
+                      if (validateCustomerInfo()) {
+                        nextStep();
+                      }
+                    };
+
                     return (
                       <div className={styles.stepContent}>
                         <h2>Müşteri Bilgileri</h2>
@@ -430,29 +460,38 @@ function BookingFlowContent() {
                             <input 
                               type="text" 
                               value={data.name || ''}
-                              onChange={(e) => updateData({ name: e.target.value })}
+                              onChange={(e) => { updateData({ name: e.target.value }); setErrors({...errors, name: ''}); }}
+                              placeholder="Örn: Ahmet Yılmaz"
+                              className={errors.name ? styles.inputError : ''}
                             />
+                            {errors.name && <span className={styles.errorText}>{errors.name}</span>}
                           </div>
                           <div className={styles.inputGroup}>
                             <label>Telefon</label>
                             <input 
                               type="tel" 
                               value={data.phone || ''}
-                              onChange={(e) => updateData({ phone: e.target.value })}
+                              onChange={(e) => { updateData({ phone: e.target.value }); setErrors({...errors, phone: ''}); }}
+                              placeholder="05xx xxx xx xx"
+                              className={errors.phone ? styles.inputError : ''}
                             />
+                            {errors.phone && <span className={styles.errorText}>{errors.phone}</span>}
                           </div>
                           <div className={`${styles.inputGroup} ${styles.fullWidth}`}>
                             <label>E-posta</label>
                             <input 
                               type="email" 
                               value={data.email || ''}
-                              onChange={(e) => updateData({ email: e.target.value })}
+                              onChange={(e) => { updateData({ email: e.target.value }); setErrors({...errors, email: ''}); }}
+                              placeholder="örnek@mail.com"
+                              className={errors.email ? styles.inputError : ''}
                             />
+                            {errors.email && <span className={styles.errorText}>{errors.email}</span>}
                           </div>
                         </div>
                         <div className={styles.stepActions}>
                           <button className={styles.backBtn} onClick={prevStep}>Geri</button>
-                          <button className="btn-solid" disabled={!data.name || !data.phone || !data.email} onClick={nextStep}>Özeti İncele</button>
+                          <button className="btn-solid" disabled={!data.name || !data.phone || !data.email} onClick={handleCustomerSubmit}>Özeti İncele</button>
                         </div>
                       </div>
                     );
