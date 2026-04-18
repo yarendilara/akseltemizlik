@@ -882,7 +882,7 @@
 
 /* ── Mobile (≤768px) ── */
 @media (max-width: 768px) {
-  .hero { padding: 7rem 0 6rem; }
+  .hero { padding: 150px 0 6rem; }
 
   .title { font-size: 2.6rem; }
   .subtitle { font-size: 1.05rem; max-width: 100%; }
@@ -922,7 +922,7 @@
 
 /* ── Small mobile (≤480px) ── */
 @media (max-width: 480px) {
-  .hero { padding: 5.5rem 0 4.5rem; }
+  .hero { padding: 160px 0 4.5rem; }
 
   .title { font-size: 1.8rem; letter-spacing: -0.01em; }
   .subtitle { font-size: 0.92rem; margin-bottom: 2rem; }
