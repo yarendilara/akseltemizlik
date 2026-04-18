@@ -24,9 +24,9 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({ success: true, bookingId: booking.id });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Booking Error:", error);
-    return NextResponse.json({ error: "Rezervasyon kaydedilemedi." }, { status: 500 });
+    return NextResponse.json({ error: "Rezervasyon kaydedilemedi. Detay: " + (error?.message || String(error)) }, { status: 400 });
   }
 }
 
