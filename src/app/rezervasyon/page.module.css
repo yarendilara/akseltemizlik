@@ -158,6 +158,12 @@
   box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
 }
 
+.stepContent button.btn-solid {
+  margin-top: 2.5rem;
+  width: 100%;
+  max-width: 280px;
+}
+
 /* Back button */
 .stepActions {
   display: flex;
