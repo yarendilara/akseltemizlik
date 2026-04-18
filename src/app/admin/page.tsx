@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function AdminDashboard() {
   const [resList, setResList] = useState<any[]>([]);
+  const [allBookings, setAllBookings] = useState<any[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [filter, setFilter] = useState<'ALL' | 'SUBMITTED' | 'PENDING_REVIEW' | 'CONFIRMED'>('ALL');
 
@@ -35,6 +36,7 @@ export default function AdminDashboard() {
       let all = await resp.json();
       
       if (Array.isArray(all)) {
+        setAllBookings(all);
         if (filter !== 'ALL') {
           all = all.filter((b: any) => b.status === filter);
         }
@@ -60,10 +62,10 @@ export default function AdminDashboard() {
   };
 
   const stats = [
-    { label: "Yeni Rezervasyonlar", value: "12", trend: "Tümü", icon: ClipboardList, color: "var(--accent-blue)", filterType: 'SUBMITTED' },
-    { label: "İncelenmeyi Bekleyen", value: "4", trend: "Acil", icon: AlertTriangle, color: "var(--warning)", filterType: 'PENDING_REVIEW' },
-    { label: "Onaylanan Randevular", value: "85", trend: "Haftalık", icon: CheckCircle2, color: "var(--success)", filterType: 'CONFIRMED' },
-    { label: "Tüm İşler", value: "142", trend: "Stabil", icon: TrendingUp, color: "var(--text-primary)", filterType: 'ALL' },
+    { label: "Yeni Rezervasyonlar", value: allBookings.filter(b => b.status === 'SUBMITTED').length.toString(), trend: "Tümü", icon: ClipboardList, color: "var(--accent-blue)", filterType: 'SUBMITTED' },
+    { label: "İncelenmeyi Bekleyen", value: allBookings.filter(b => b.status === 'PENDING_REVIEW').length.toString(), trend: "Acil", icon: AlertTriangle, color: "var(--warning)", filterType: 'PENDING_REVIEW' },
+    { label: "Onaylanan Randevular", value: allBookings.filter(b => b.status === 'CONFIRMED').length.toString(), trend: "Haftalık", icon: CheckCircle2, color: "var(--success)", filterType: 'CONFIRMED' },
+    { label: "Tüm İşler", value: allBookings.length.toString(), trend: "Stabil", icon: TrendingUp, color: "var(--text-primary)", filterType: 'ALL' },
   ];
 
   return (
