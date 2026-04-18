@@ -38,41 +38,45 @@ export default function AdminDashboard() {
       const resp = await fetch('/api/bookings');
       let all = await resp.json();
       
-      if (Array.isArray(all)) {
-        setAllBookings(all);
-        
-        if (isInitialLoad) {
-           setIsInitialLoad(false);
-           const newCount = all.filter((b: any) => b.status === 'SUBMITTED').length;
-           
-           if (newCount > 0) {
-              // Havai fişek patlatma (eğer yeni randevu varsa)
-              const duration = 2.5 * 1000;
-              const animationEnd = Date.now() + duration;
-              const frame = () => {
-                confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#0EA5E9', '#FACC15'] });
-                confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#0EA5E9', '#FACC15'] });
-                if (Date.now() < animationEnd) { requestAnimationFrame(frame); }
-              };
-              frame();
-           } else {
-              // Ufak bir karşılama patlaması (yeni iş olmasa da moral için)
-              confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 }, colors: ['#94a3b8', '#cbd5e1'] });
-           }
-
-           setTimeout(() => {
-             setShowSplash(false);
-           }, 4000);
-        }
-
-        if (filter !== 'ALL') {
-          all = all.filter((b: any) => b.status === filter);
-        }
-        setResList(all.slice(0, 10)); 
+      if (!Array.isArray(all)) {
+        console.error("API Dashboard Error: Data is not an array. Payload:", all);
+        all = [];
       }
+      
+      setAllBookings(all);
+      
+      if (isInitialLoad) {
+         setIsInitialLoad(false);
+         const newCount = all.filter((b: any) => b.status === 'SUBMITTED').length;
+         
+         if (newCount > 0) {
+            // Havai fişek patlatma (eğer yeni randevu varsa)
+            const duration = 2.5 * 1000;
+            const animationEnd = Date.now() + duration;
+            const frame = () => {
+              confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#0EA5E9', '#FACC15'] });
+              confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#0EA5E9', '#FACC15'] });
+              if (Date.now() < animationEnd) { requestAnimationFrame(frame); }
+            };
+            frame();
+         } else {
+            // Ufak bir karşılama patlaması (yeni iş olmasa da moral için)
+            confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 }, colors: ['#94a3b8', '#cbd5e1'] });
+         }
+
+         setTimeout(() => {
+           setShowSplash(false);
+         }, 4000);
+      }
+
+      if (filter !== 'ALL') {
+        all = all.filter((b: any) => b.status === filter);
+      }
+      setResList(all.slice(0, 10)); 
     } catch (err) {
       console.error("Data load error:", err);
-      if (isInitialLoad) setTimeout(() => setShowSplash(false), 2000);
+      setIsInitialLoad(false);
+      setTimeout(() => setShowSplash(false), 2000);
     }
   };
 
