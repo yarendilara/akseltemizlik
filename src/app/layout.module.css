@@ -304,7 +304,7 @@
 
   .navLinks a {
     font-size: 1.4rem;
-    padding: 1rem 2rem;
+    padding: 1.2rem 2rem;
     color: var(--text-primary);
   }
 
@@ -312,6 +312,13 @@
 }
 
 @media (max-width: 768px) {
+  .topBar { height: auto; padding: 0.5rem 0; }
+  .topBarContainer { flex-direction: column; gap: 0.4rem; }
+  .topLinks, .topSocials { gap: 1rem; }
+  .topItem span { font-size: 0.75rem; }
+  
+  .headerScrolled { transform: translateY(-70px); } /* Adjust for taller mobile topbar */
+
   .footerGrid { grid-template-columns: 1fr; }
   .copyright { flex-direction: column; gap: 0.8rem; text-align: center; }
 }

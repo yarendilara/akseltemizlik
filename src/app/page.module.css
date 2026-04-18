@@ -922,33 +922,34 @@
 
 /* ── Small mobile (≤480px) ── */
 @media (max-width: 480px) {
-  .hero { padding: 6rem 0 5.5rem; }
+  .hero { padding: 5.5rem 0 4.5rem; }
 
-  .title { font-size: 2rem; letter-spacing: -0.01em; }
-  .subtitle { font-size: 0.97rem; margin-bottom: 2rem; }
-  .badge { font-size: 0.75rem; padding: 0.45rem 0.9rem; margin-bottom: 1.4rem; }
+  .title { font-size: 1.8rem; letter-spacing: -0.01em; }
+  .subtitle { font-size: 0.92rem; margin-bottom: 2rem; }
+  .badge { font-size: 0.7rem; padding: 0.4rem 0.8rem; margin-bottom: 1.2rem; }
 
-  .bookingRow { padding: 1.1rem; border-radius: var(--radius-lg); }
+  .bookingRow { padding: 1rem; border-radius: var(--radius-lg); }
 
-  .serviceSlider { grid-template-columns: 1fr; }
+  .serviceSlider, .grid { grid-template-columns: 1fr; }
 
   .statsInner {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     margin: 1.5rem 0.5rem 0;
     padding: 1.8rem 1.2rem;
     border-radius: var(--radius-lg);
   }
-  .statNumber { font-size: 2rem; }
-  .statLabel { font-size: 0.8rem; }
+  .statNumber { font-size: 2.2rem; }
+  .statLabel { font-size: 0.85rem; }
 
-  .stepNumber { width: 60px; height: 60px; }
+  .stepNumber { width: 56px; height: 56px; font-size: 1.5rem; }
 
-  .ctaInner { padding: 2.5rem 1.1rem; }
-  .ctaInner h2 { font-size: 1.5rem; }
-  .ctaBtns { flex-direction: column; align-items: center; }
+  .ctaInner { padding: 2.5rem 1rem; }
+  .ctaInner h2 { font-size: 1.6rem; }
+  .ctaBtns { flex-direction: column; width: 100%; }
+  .ctaBtns a, .ctaBtns button { width: 100%; justify-content: center; }
 
-  .faqItem { padding: 1.2rem 1rem; }
-  .faqItem h5 { font-size: 0.92rem; }
+  .faqItem { padding: 1.1rem 0.8rem; }
+  .faqItem h5 { font-size: 0.88rem; }
 }
 
 /* Intermediate Image */

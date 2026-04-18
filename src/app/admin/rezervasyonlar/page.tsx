@@ -51,7 +51,7 @@ export default function ReservationsAdmin() {
       <div className={styles.tableCard}>
         <div className={styles.cardHeader}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <div className={styles.searchBar} style={{ width: '300px' }}>
+            <div className={styles.searchBar}>
               <Search size={16} className={styles.searchIcon} />
               <input type="text" placeholder="ID veya müşteri ara..." style={{ width: '100%', paddingLeft: '3rem' }} />
             </div>
@@ -78,12 +78,12 @@ export default function ReservationsAdmin() {
           <tbody>
             {resList.map((res: any, index: number) => (
               <tr key={res.id || index}>
-                <td><code style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>#{res.id || `AKSEL-G${index}`}</code></td>
-                <td>{res.customer}</td>
-                <td>{res.district || "Belirtilmedi"}</td>
-                <td>{res.service}</td>
-                <td>{res.date}</td>
-                <td>
+                <td data-label="ID"><code style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>#{res.id || `AKSEL-G${index}`}</code></td>
+                <td data-label="Müşteri">{res.customer}</td>
+                <td data-label="İlçe">{res.district || "Belirtilmedi"}</td>
+                <td data-label="Hizmet">{res.service}</td>
+                <td data-label="Zaman">{res.date}</td>
+                <td data-label="Durum">
                   <span className={styles.statusBadge} style={{
                     background: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color + '22',
                     color: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color
@@ -91,7 +91,7 @@ export default function ReservationsAdmin() {
                     {((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).label}
                   </span>
                 </td>
-                <td>
+                <td data-label="İşlemler">
                   <div style={{ display: 'flex', gap: '0.8rem' }}>
                       <button 
                         className={styles.actionBtn} 
