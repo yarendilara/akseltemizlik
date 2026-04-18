@@ -12,6 +12,7 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 const pool = new Pool({ connectionString });
+// @ts-ignore: Mismatched type definition between @prisma/adapter-neon and @neondatabase/serverless
 const adapter = new PrismaNeon(pool);
 
 export const prisma =
