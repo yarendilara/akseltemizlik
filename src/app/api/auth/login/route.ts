@@ -6,7 +6,11 @@ export async function POST(request: Request) {
     const { password } = await request.json();
 
     // Production environment should use environment variable for this
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "1oyMZ1261GaFoLXq";
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+    if (!ADMIN_PASSWORD) {
+        return NextResponse.json({ error: "Sistem yapılandırma hatası. Yönetici şifresi tanımlanmamış." }, { status: 500 });
+    }
 
     if (password === ADMIN_PASSWORD) {
       // Set a secure session cookie
