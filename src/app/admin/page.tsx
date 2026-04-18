@@ -54,7 +54,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className={styles.dashHeader}>
         <h1>Operasyon Merkezi</h1>
-        <p>Aksel Temizlik ana yönetim ekranı.</p>
+        <p>Zinde Temizlik ana yönetim ekranı.</p>
       </div>
 
       <div className={styles.statsGrid}>
@@ -100,11 +100,11 @@ export default function AdminDashboard() {
             <tbody>
               {resList.map((res: any, index: number) => (
                 <tr key={res.id || index}>
-                  <td>{res.customer}</td>
-                  <td>{res.district}</td>
-                  <td>{res.service}</td>
-                  <td>{res.date}</td>
-                  <td>
+                  <td data-label="Müşteri">{res.customer}</td>
+                  <td data-label="İlçe">{res.district}</td>
+                  <td data-label="Hizmet">{res.service}</td>
+                  <td data-label="Zaman">{res.date}</td>
+                  <td data-label="Durum">
                     <span className={styles.statusBadge} style={{ 
                       background: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color + '22', 
                       color: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color 
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
                       {((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).label}
                     </span>
                   </td>
-                  <td>
+                  <td data-label="İşlem">
                     <button 
                       className={styles.actionBtn}
                       onClick={() => setSelectedBooking(res)}

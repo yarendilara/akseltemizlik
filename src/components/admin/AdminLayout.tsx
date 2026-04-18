@@ -20,6 +20,7 @@ import styles from './admin-layout.module.css';
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const menuItems = [
     { title: "Dashboard", path: "/admin", icon: BarChart3 },
@@ -32,11 +33,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className={styles.adminContainer}>
-      <aside className={styles.sidebar}>
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
         <div className={styles.sidebarHeader}>
           <Link href="/admin" className={styles.logo}>
-            AKSEL<span>ADMIN</span>
+            ZİNDE<span>ADMIN</span>
           </Link>
+          <button className={styles.closeSidebar} onClick={() => setSidebarOpen(false)}>
+            <LogOut size={20} style={{ transform: 'rotate(180deg)' }} />
+          </button>
         </div>
         <nav className={styles.nav}>
           {menuItems.map(item => {
@@ -47,6 +51,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 key={item.path} 
                 href={item.path}
                 className={`${styles.navItem} ${isActive ? styles.active : ''}`}
+                onClick={() => setSidebarOpen(false)}
               >
                 <span className={styles.icon}><Icon size={18} strokeWidth={isActive ? 2.5 : 2} /></span>
                 <span className={styles.title}>{item.title}</span>
@@ -56,22 +61,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
         <div className={styles.sidebarFooter}>
           <div className={styles.adminInfo}>
-            <div className={styles.avatar}>SA</div>
+            <div className={styles.avatar}>ZT</div>
             <div>
-              <p>Super Admin</p>
+              <p>Yönetici</p>
               <span>Çevrimiçi</span>
             </div>
           </div>
           <button className={styles.logoutBtn} onClick={() => router.push('/')}>
-            <LogOut size={16} /> <span>Çıkış</span>
+            <LogOut size={16} /> <span>Çıkış Yap</span>
           </button>
         </div>
       </aside>
+
+      {sidebarOpen && <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />}
+
       <main className={styles.content}>
         <header className={styles.header}>
-          <div className={styles.searchBar}>
-            <Search size={16} className={styles.searchIcon} />
-            <input type="text" placeholder="Rezervasyon veya müşteri ara..." />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button className={styles.menuBtn} onClick={() => setSidebarOpen(true)}>
+              <ClipboardList size={24} />
+            </button>
+            <div className={styles.searchBar}>
+              <Search size={16} className={styles.searchIcon} />
+              <input type="text" placeholder="Rezervasyon ara..." />
+            </div>
           </div>
           <div className={styles.headerActions}>
             <div className={styles.notification}>
