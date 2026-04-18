@@ -39,6 +39,9 @@ export async function createBookingTask(payload: { serviceId: string, districtId
     const booking = await tx.booking.create({
       data: {
         customerId: session.user.id,
+        customerName: "Kayıtlı Müşteri",
+        customerPhone: "Sistemde Kayıtlı",
+        customerEmail: session.user.email,
         serviceId: payload.serviceId,
         districtId: payload.districtId,
         startAt,
