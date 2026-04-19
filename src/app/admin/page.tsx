@@ -11,23 +11,33 @@ import {
   Phone, 
   MessageCircle, 
   XCircle,
-  Eye
+  Eye,
+  Calendar,
+  MapPin,
+  Clock
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from './page.module.css';
-import { SecurityUtils } from '@/lib/security-utils';
 import { BOOKING_STATES } from '@/lib/constants';
-import { getBookings, updateBookingStatus } from '@/lib/mock-db';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
 export default function AdminDashboard() {
-  const [showSplash, setShowSplash] = useState(true);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const [resList, setResList] = useState<any[]>([]);
   const [allBookings, setAllBookings] = useState<any[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<any | null>(null);
   const [filter, setFilter] = useState<'ALL' | 'SUBMITTED' | 'PENDING_REVIEW' | 'CONFIRMED'>('ALL');
+
+  useEffect(() => {
+    // Splash sadece login'den gelince gösterilsin
+    const justLoggedIn = sessionStorage.getItem('admin_just_logged_in');
+    if (justLoggedIn === 'true') {
+      setShowSplash(true);
+      sessionStorage.removeItem('admin_just_logged_in');
+    }
+    loadData();
+  }, []);
 
   useEffect(() => {
     loadData();
@@ -39,44 +49,37 @@ export default function AdminDashboard() {
       let all = await resp.json();
       
       if (!Array.isArray(all)) {
-        console.error("API Dashboard Error: Data is not an array. Payload:", all);
         all = [];
       }
       
       setAllBookings(all);
-      
-      if (isInitialLoad) {
-         setIsInitialLoad(false);
-         const newCount = all.filter((b: any) => b.status === 'SUBMITTED').length;
-         
-         if (newCount > 0) {
-            // Havai fişek patlatma (eğer yeni randevu varsa)
-            const duration = 2.5 * 1000;
-            const animationEnd = Date.now() + duration;
-            const frame = () => {
-              confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#0EA5E9', '#FACC15'] });
-              confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#0EA5E9', '#FACC15'] });
-              if (Date.now() < animationEnd) { requestAnimationFrame(frame); }
-            };
-            frame();
-         } else {
-            // Ufak bir karşılama patlaması (yeni iş olmasa da moral için)
-            confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 }, colors: ['#94a3b8', '#cbd5e1'] });
-         }
 
-         setTimeout(() => {
-           setShowSplash(false);
-         }, 4000);
+      // Splash animasyonu (sadece login sonrası)
+      if (showSplash) {
+        const newCount = all.filter((b: any) => b.status === 'SUBMITTED').length;
+        if (newCount > 0) {
+          const duration = 2.5 * 1000;
+          const animationEnd = Date.now() + duration;
+           const frame = () => {
+             confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#0EA5E9', '#FACC15'] });
+             confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#0EA5E9', '#FACC15'] });
+             if (Date.now() < animationEnd) { requestAnimationFrame(frame); }
+           };
+           frame();
+        } else {
+          confetti({ particleCount: 40, spread: 70, origin: { y: 0.6 }, colors: ['#94a3b8', '#cbd5e1'] });
+        }
+        setTimeout(() => setShowSplash(false), 3500);
       }
 
+      let filtered = [...all];
       if (filter !== 'ALL') {
-        all = all.filter((b: any) => b.status === filter);
+        filtered = filtered.filter((b: any) => b.status === filter);
       }
-      setResList(all.slice(0, 10)); 
+      setResList(filtered.slice(0, 10)); 
     } catch (err) {
       console.error("Data load error:", err);
-      setIsInitialLoad(false);
-      setTimeout(() => setShowSplash(false), 2000);
+      setShowSplash(false);
     }
   };
 
@@ -94,11 +97,22 @@ export default function AdminDashboard() {
     }
   };
 
+  const formatDate = (dateStr: string) => {
+    if (!dateStr) return 'Belirtilmedi';
+    try {
+      return new Date(dateStr).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    } catch { return dateStr; }
+  };
+
+  const newCount = allBookings.filter(b => b.status === 'SUBMITTED').length;
+  const pendingCount = allBookings.filter(b => b.status === 'PENDING_REVIEW').length;
+  const confirmedCount = allBookings.filter(b => b.status === 'CONFIRMED').length;
+
   const stats = [
-    { label: "Yeni Rezervasyonlar", value: allBookings.filter(b => b.status === 'SUBMITTED').length.toString(), trend: "Tümü", icon: ClipboardList, color: "var(--accent-blue)", filterType: 'SUBMITTED' },
-    { label: "İncelenmeyi Bekleyen", value: allBookings.filter(b => b.status === 'PENDING_REVIEW').length.toString(), trend: "Acil", icon: AlertTriangle, color: "var(--warning)", filterType: 'PENDING_REVIEW' },
-    { label: "Onaylanan Randevular", value: allBookings.filter(b => b.status === 'CONFIRMED').length.toString(), trend: "Haftalık", icon: CheckCircle2, color: "var(--success)", filterType: 'CONFIRMED' },
-    { label: "Tüm İşler", value: allBookings.length.toString(), trend: "Stabil", icon: TrendingUp, color: "var(--text-primary)", filterType: 'ALL' },
+    { label: "Yeni Talepler", value: newCount.toString(), trend: newCount > 0 ? "Aksiyon Gerekli" : "Temiz", icon: ClipboardList, color: "#0EA5E9", filterType: 'SUBMITTED' },
+    { label: "İncelemede", value: pendingCount.toString(), trend: pendingCount > 0 ? "Bekliyor" : "Yok", icon: AlertTriangle, color: "#f59e0b", filterType: 'PENDING_REVIEW' },
+    { label: "Onaylanan", value: confirmedCount.toString(), trend: "Aktif", icon: CheckCircle2, color: "#10b981", filterType: 'CONFIRMED' },
+    { label: "Toplam İş", value: allBookings.length.toString(), trend: "Tüm Zamanlar", icon: TrendingUp, color: "#64748b", filterType: 'ALL' },
   ];
 
   return (
@@ -124,29 +138,24 @@ export default function AdminDashboard() {
             >
               Hoşgeldiniz Aysel Hanım ✨
             </motion.h1>
-            {isInitialLoad ? (
-              <motion.div animate={{ opacity: [0.5, 1, 0.5] }} transition={{ repeat: Infinity, duration: 1 }}>
-                 <p style={{ color: '#94a3b8', fontSize: '1.1rem' }}>Sistem kontrol ediliyor...</p>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                style={{
-                  background: allBookings.filter(b => b.status === 'SUBMITTED').length > 0 ? 'rgba(52, 211, 153, 0.1)' : 'rgba(255, 255, 255, 0.05)',
-                  padding: '1rem 2rem', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.1)'
-                }}
-              >
-                <p style={{ 
-                    fontSize: '1.2rem', margin: 0,
-                    color: allBookings.filter(b => b.status === 'SUBMITTED').length > 0 ? '#34D399' : '#cbd5e1' 
-                }}>
-                  {allBookings.filter(b => b.status === 'SUBMITTED').length > 0 
-                    ? `Harika haber! Göz atmanızı bekleyen ${allBookings.filter(b => b.status === 'SUBMITTED').length} yeni randevunuz var.` 
-                    : "Şuanlık yeni randevular göremiyorum maalesef."}
-                </p>
-              </motion.div>
-            )}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              style={{
+                background: newCount > 0 ? 'rgba(52, 211, 153, 0.1)' : 'rgba(255, 255, 255, 0.05)',
+                padding: '1rem 2rem', borderRadius: '50px', border: '1px solid rgba(255,255,255,0.1)'
+              }}
+            >
+              <p style={{ 
+                  fontSize: '1.2rem', margin: 0,
+                  color: newCount > 0 ? '#34D399' : '#cbd5e1' 
+              }}>
+                {newCount > 0 
+                  ? `🎉 ${newCount} yeni randevu talebi sizi bekliyor!` 
+                  : "Şuanlık yeni randevu talebi yok."}
+              </p>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -154,7 +163,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <div className={styles.dashHeader}>
         <h1>Operasyon Merkezi</h1>
-        <p>Zinde Temizlik ana yönetim ekranı.</p>
+        <p>Zinde Temizlik — Tüm randevuları tek ekrandan yönetin.</p>
       </div>
 
       <div className={styles.statsGrid}>
@@ -179,12 +188,14 @@ export default function AdminDashboard() {
         <div className={styles.tableCard}>
           <div className={styles.cardHeader}>
             <h3>
-              {filter === 'SUBMITTED' ? 'Yeni Talepler' : 
-               filter === 'PENDING_REVIEW' ? 'İncelemedeki Talepler' : 
-               filter === 'CONFIRMED' ? 'Onaylanan Randevular' : 'Son Rezervasyon Talepleri'}
+              {filter === 'SUBMITTED' ? '🆕 Yeni Talepler' : 
+               filter === 'PENDING_REVIEW' ? '⏳ İncelemedeki Talepler' : 
+               filter === 'CONFIRMED' ? '✅ Onaylanan Randevular' : '📋 Son Rezervasyon Talepleri'}
             </h3>
-            {filter !== 'ALL' && <button className={styles.viewAll} onClick={() => setFilter('ALL')}>Temizle</button>}
-            <button className={styles.viewAll} onClick={() => window.location.href = '/admin/rezervasyonlar'}>Tümünü Gör</button>
+            <div style={{ display: 'flex', gap: '0.8rem' }}>
+              {filter !== 'ALL' && <button className={styles.viewAll} onClick={() => setFilter('ALL')}>Filtreyi Temizle</button>}
+              <button className={styles.viewAll} onClick={() => window.location.href = '/admin/rezervasyonlar'}>Tümünü Gör →</button>
+            </div>
           </div>
           <table className={styles.table}>
             <thead>
@@ -192,18 +203,20 @@ export default function AdminDashboard() {
                 <th>Müşteri</th>
                 <th>İlçe</th>
                 <th>Hizmet</th>
-                <th>Zaman</th>
+                <th>Tarih & Saat</th>
                 <th>Durum</th>
                 <th>İşlem</th>
               </tr>
             </thead>
             <tbody>
-              {resList.map((res: any, index: number) => (
+              {resList.length === 0 ? (
+                <tr><td colSpan={6} style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>Henüz kayıt bulunmuyor.</td></tr>
+              ) : resList.map((res: any, index: number) => (
                 <tr key={res.id || index}>
-                  <td data-label="Müşteri">{res.customerName || res.customer}</td>
-                  <td data-label="İlçe">{res.districtId || res.district}</td>
-                  <td data-label="Hizmet">{res.serviceId || res.service}</td>
-                  <td data-label="Zaman">{res.startAt ? new Date(res.startAt).toLocaleString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : res.date}</td>
+                  <td data-label="Müşteri"><strong>{res.customerName || 'Belirtilmedi'}</strong></td>
+                  <td data-label="İlçe">{res.districtId || 'Belirtilmedi'}</td>
+                  <td data-label="Hizmet">{res.serviceId || 'Belirtilmedi'}</td>
+                  <td data-label="Tarih">{formatDate(res.startAt)}</td>
                   <td data-label="Durum">
                     <span className={styles.statusBadge} style={{ 
                       background: ((BOOKING_STATES as any)[res.status] || BOOKING_STATES.SUBMITTED).color + '22', 
@@ -217,7 +230,7 @@ export default function AdminDashboard() {
                       className={styles.actionBtn}
                       onClick={() => setSelectedBooking(res)}
                     >
-                      Detay
+                      <Eye size={14} /> Detay
                     </button>
                   </td>
                 </tr>
@@ -245,10 +258,6 @@ export default function AdminDashboard() {
               <div className={styles.modalBody}>
                 <div className={styles.detailGrid}>
                   <div className={styles.detailItem}>
-                    <label>ID</label>
-                    <p>{selectedBooking.id}</p>
-                  </div>
-                  <div className={styles.detailItem}>
                     <label>Durum</label>
                     <p style={{ color: ((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).color }}>
                       {((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).label}
@@ -256,40 +265,47 @@ export default function AdminDashboard() {
                   </div>
                   <div className={styles.detailItem}>
                     <label>Müşteri</label>
-                    <p>{selectedBooking.customer}</p>
+                    <p>{selectedBooking.customerName || 'Belirtilmedi'}</p>
                   </div>
                   <div className={styles.detailItem}>
                     <label>Telefon</label>
-                    <p>{selectedBooking.phone || "Belirtilmedi"}</p>
+                    <p>{selectedBooking.customerPhone || 'Belirtilmedi'}</p>
+                  </div>
+                  <div className={styles.detailItem}>
+                    <label>E-posta</label>
+                    <p>{selectedBooking.customerEmail || 'Belirtilmedi'}</p>
                   </div>
                   <div className={styles.detailItem}>
                     <label>Hizmet</label>
-                    <p>{selectedBooking.service}</p>
+                    <p>{selectedBooking.serviceId || 'Belirtilmedi'}</p>
                   </div>
                   <div className={styles.detailItem}>
                     <label>Bölge</label>
-                    <p>{selectedBooking.district}</p>
+                    <p>{selectedBooking.districtId || 'Belirtilmedi'}</p>
                   </div>
                   <div className={styles.detailItem}>
-                    <label>Zaman</label>
-                    <p>{selectedBooking.date}</p>
+                    <label>Tarih & Saat</label>
+                    <p>{formatDate(selectedBooking.startAt)}</p>
                   </div>
                   <div className={styles.detailItem}>
-                    <label>Bütçe</label>
-                    <p>{selectedBooking.budgetRange || selectedBooking.customBudget || "Belirtilmedi"}</p>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <label>Süre / Ekip</label>
-                    <p>{selectedBooking.duration === 'FULL' ? 'Tam Gün' : 'Yarım Gün'} / {selectedBooking.teamSize || '1'} Kişi</p>
+                    <label>Adres</label>
+                    <p>{selectedBooking.address || 'Belirtilmedi'}</p>
                   </div>
                 </div>
 
+                {selectedBooking.notes && (
+                  <div style={{ marginBottom: '1.5rem', padding: '1rem', background: 'rgba(14,165,233,0.05)', borderRadius: '8px' }}>
+                    <label style={{ fontSize: '0.7rem', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: '0.3rem', display: 'block' }}>Notlar</label>
+                    <p style={{ color: 'var(--text-primary)', fontSize: '0.9rem' }}>{selectedBooking.notes}</p>
+                  </div>
+                )}
+
                 <div className={styles.contactActions}>
-                   <a href={`tel:${selectedBooking.phone}`} className={styles.contactBtn}>
+                   <a href={`tel:${selectedBooking.customerPhone}`} className={styles.contactBtn}>
                       <Phone size={16} /> Müşteriyi Ara
                    </a>
-                   <a href={`https://wa.me/${selectedBooking.phone?.replace(/[^0-9]/g, '')}`} target="_blank" className={styles.contactBtn} style={{ background: '#25D366' }}>
-                      <MessageCircle size={16} /> WhatsApp'tan Yaz
+                   <a href={`https://wa.me/90${selectedBooking.customerPhone?.replace(/[^0-9]/g, '').replace(/^0/, '')}`} target="_blank" className={styles.contactBtn} style={{ background: '#25D366' }}>
+                      <MessageCircle size={16} /> WhatsApp
                    </a>
                 </div>
 
@@ -298,13 +314,13 @@ export default function AdminDashboard() {
                     className={styles.rejectBtn}
                     onClick={() => handleStatusUpdate(selectedBooking.id, 'CANCELED')}
                   >
-                    <XCircle size={16} /> Reddet / İptal Et
+                    <XCircle size={16} /> Reddet / İptal
                   </button>
                   <button 
                     className={styles.approveBtn}
                     onClick={() => handleStatusUpdate(selectedBooking.id, 'CONFIRMED')}
                   >
-                    <CheckCircle2 size={16} /> Randevuyu Onayla
+                    <CheckCircle2 size={16} /> Onayla
                   </button>
                 </div>
               </div>

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from 'react';
-import { Lock, Clock, CheckCircle2 } from 'lucide-react';
+import { Lock, Clock, CheckCircle2, Settings, Shield } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
 
 export default function SettingsAdmin() {
+  const [startTime, setStartTime] = useState('09:00');
+  const [endTime, setEndTime] = useState('18:00');
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -13,74 +15,136 @@ export default function SettingsAdmin() {
     setIsSaving(true);
     setSaveSuccess(false);
     
-    // Simulate API call
     setTimeout(() => {
       setIsSaving(false);
       setSaveSuccess(true);
-      
-      // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
-    }, 1200);
+    }, 800);
   };
 
   return (
     <AdminLayout>
       <div className={styles.dashHeader}>
-        <h1>Sistem Ayarları</h1>
-        <p>Aksel platformu global parametrelerini ve güvenlik yapılandırmalarını buradan yönetin.</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+          <Settings size={24} style={{ color: 'var(--accent-blue)' }} />
+          <h1>Sistem Ayarları</h1>
+        </div>
+        <p>Platform parametrelerini ve güvenlik yapılandırmalarını buradan yönetin.</p>
       </div>
 
-      <div className={styles.tableCard}>
-        <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+      {/* Working Hours */}
+      <div className={styles.tableCard} style={{ marginBottom: '1.5rem' }}>
+        <div style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+            <Clock size={20} style={{ color: 'var(--accent-blue)' }} />
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem' }}>Çalışma Saatleri</h3>
+          </div>
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-              <Lock size={20} className={styles.accentIcon} />
-              <h4 style={{ color: 'var(--white)' }}>Güvenlik ve Şifreleme</h4>
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: '1fr 1fr', 
+            gap: '1.5rem', 
+            marginBottom: '1.5rem',
+          }}>
+            <div>
+              <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Başlangıç Saati</label>
+              <input 
+                type="time" 
+                value={startTime}
+                onChange={e => setStartTime(e.target.value)}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.8rem 1rem', 
+                  background: 'var(--bg-card)', 
+                  border: '1.5px solid rgba(14,165,233,0.15)', 
+                  color: 'var(--text-primary)', 
+                  borderRadius: '10px',
+                  fontSize: '1rem',
+                }} 
+              />
             </div>
-            <div style={{ padding: '1.5rem', background: 'rgba(2, 12, 27, 0.4)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <span style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Ana Şifreleme Anahtarı (AES-256-GCM)</span>
-                <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Mevcut anahtar geçerlidir ve HSM modülünde saklanmaktadır.</p>
-              </div>
-              <button className={styles.actionBtn} onClick={() => alert("Anahtar rotasyonu operasyonel onay gerektirir.")}>Rotasyon Yap</button>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
-              <Clock size={20} className={styles.accentIcon} />
-              <h4 style={{ color: 'var(--white)' }}>Operasyonel Çalışma Saatleri</h4>
-            </div>
-            <div style={{ padding: '1.5rem', background: 'rgba(2, 12, 27, 0.4)', borderRadius: '8px' }}>
-              <div style={{ display: 'flex', gap: '2rem', marginBottom: '1.5rem' }}>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Genel Başlangıç Saati</span>
-                  <input type="time" defaultValue="09:00" style={{ marginTop: '0.5rem', width: '100%', padding: '0.8rem', background: '#020C1B', border: '1px solid #112240', color: 'var(--white)', borderRadius: '4px' }} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Genel Bitiş Saati</span>
-                  <input type="time" defaultValue="18:00" style={{ marginTop: '0.5rem', width: '100%', padding: '0.8rem', background: '#020C1B', border: '1px solid #112240', color: 'var(--white)', borderRadius: '4px' }} />
-                </div>
-              </div>
-              
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <button 
-                  className={styles.actionBtn} 
-                  onClick={handleSave}
-                  disabled={isSaving}
-                >
-                  {isSaving ? "Kaydediliyor..." : "Evi-Plan Güncelle"}
-                </button>
-                {saveSuccess && (
-                  <span style={{ color: 'var(--success)', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <CheckCircle2 size={16} /> Başarıyla güncellendi.
-                  </span>
-                )}
-              </div>
+            <div>
+              <label style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.5rem' }}>Bitiş Saati</label>
+              <input 
+                type="time" 
+                value={endTime}
+                onChange={e => setEndTime(e.target.value)}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.8rem 1rem', 
+                  background: 'var(--bg-card)', 
+                  border: '1.5px solid rgba(14,165,233,0.15)', 
+                  color: 'var(--text-primary)', 
+                  borderRadius: '10px',
+                  fontSize: '1rem',
+                }} 
+              />
             </div>
           </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <button 
+              onClick={handleSave}
+              disabled={isSaving}
+              style={{
+                padding: '0.7rem 1.5rem',
+                background: '#0EA5E9',
+                color: '#fff',
+                borderRadius: '10px',
+                fontWeight: 600,
+                fontSize: '0.9rem',
+                opacity: isSaving ? 0.6 : 1,
+                transition: 'all 0.2s',
+              }}
+            >
+              {isSaving ? "Kaydediliyor..." : "Kaydet"}
+            </button>
+            {saveSuccess && (
+              <span style={{ color: '#10b981', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                <CheckCircle2 size={16} /> Başarıyla güncellendi.
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
 
+      {/* Security */}
+      <div className={styles.tableCard}>
+        <div style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+            <Shield size={20} style={{ color: 'var(--accent-blue)' }} />
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem' }}>Güvenlik</h3>
+          </div>
+          
+          <div style={{ 
+            padding: '1.2rem', 
+            background: 'rgba(14,165,233,0.04)', 
+            borderRadius: '10px', 
+            border: '1px solid rgba(14,165,233,0.1)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.3rem' }}>
+                <Lock size={14} style={{ display: 'inline', marginRight: '0.4rem', verticalAlign: 'middle' }} />
+                Şifreleme Durumu
+              </div>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>AES-256-GCM şifreleme aktif. Tüm veriler güvenli.</p>
+            </div>
+            <span style={{ 
+              padding: '0.4rem 1rem', 
+              background: '#10b98115', 
+              color: '#10b981', 
+              borderRadius: '50px', 
+              fontSize: '0.8rem', 
+              fontWeight: 600 
+            }}>
+              Aktif ✓
+            </span>
+          </div>
         </div>
       </div>
     </AdminLayout>

@@ -21,6 +21,8 @@ export default function AdminLogin() {
       });
 
       if (res.ok) {
+        // Splash animasyonunun sadece login sonrası gösterilmesini sağla
+        sessionStorage.setItem('admin_just_logged_in', 'true');
         window.location.href = '/admin';
       } else {
         const data = await res.json();
@@ -62,7 +64,7 @@ export default function AdminLogin() {
         </form>
 
         <div className={styles.footer}>
-          <p>🔒 Bu alan sadece yetkili personel içindir. Tüm erişimler loglanmaktadır.</p>
+          <p>🔒 Bu alan sadece yetkili personel içindir.</p>
         </div>
       </div>
     </div>
