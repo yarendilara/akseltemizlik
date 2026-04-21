@@ -1,74 +1,20 @@
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, Volume2, VolumeX } from 'lucide-react';
+import { Phone, Mail } from 'lucide-react';
 import Link from 'next/link';
 import styles from '@/app/layout.module.css';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-
-  // Audio setup
-  useEffect(() => {
-    const audio = new Audio('/music/Zinde Temizlik_ Tertemiz Hayat.mp3');
-    audio.loop = true;
-    audio.volume = 0.3;
-    audioRef.current = audio;
-
-    // Video detection — pause music when any video plays
-    const handleVideoPlay = () => {
-      if (audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-      }
-    };
-    const handleVideoPause = () => {
-      if (audioRef.current && isPlaying) {
-        audioRef.current.play().catch(() => {});
-      }
-    };
-
-    document.addEventListener('play', handleVideoPlay, true);
-    document.addEventListener('pause', handleVideoPause, true);
-    document.addEventListener('ended', handleVideoPause, true);
-
-    return () => {
-      audio.pause();
-      audio.src = '';
-      document.removeEventListener('play', handleVideoPlay, true);
-      document.removeEventListener('pause', handleVideoPause, true);
-      document.removeEventListener('ended', handleVideoPause, true);
-    };
-  }, []);
-
-  // Sync play state
-  useEffect(() => {
-    if (!audioRef.current) return;
-    
-    // Check if any video is currently playing
-    const videos = document.querySelectorAll('video');
-    let videoPlaying = false;
-    videos.forEach(v => { if (!v.paused) videoPlaying = true; });
-
-    if (isPlaying && !videoPlaying) {
-      audioRef.current.play().catch(() => {});
-    } else if (!isPlaying) {
-      audioRef.current.pause();
-    }
-  }, [isPlaying, audioRef]);
-
-  const toggleMusic = () => {
-    setIsPlaying(prev => !prev);
-  };
 
   return (
     <header className={`${styles.headerWrapper} ${scrolled ? styles.headerScrolled : ''}`}>
@@ -120,40 +66,6 @@ export default function Navbar() {
 
         {/* CTA Actions */}
         <div className={styles.navActions}>
-          {/* Music Toggle Button */}
-          <button
-            onClick={toggleMusic}
-            aria-label={isPlaying ? "Müziği Kapat" : "Müziği Aç"}
-            title={isPlaying ? "Müziği Kapat" : "Müziği Aç"}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              border: isPlaying ? '2px solid #0EA5E9' : '2px solid rgba(14,165,233,0.3)',
-              background: isPlaying ? 'rgba(14,165,233,0.1)' : 'transparent',
-              color: isPlaying ? '#0EA5E9' : '#94a3b8',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              position: 'relative',
-              overflow: 'hidden',
-            }}
-          >
-            {isPlaying ? <Volume2 size={18} /> : <VolumeX size={18} />}
-            {isPlaying && (
-              <span style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: '50%',
-                border: '2px solid #0EA5E9',
-                animation: 'musicPulse 1.5s ease-in-out infinite',
-                pointerEvents: 'none',
-              }} />
-            )}
-          </button>
-
           <motion.a
             href="/rezervasyon"
             className="btn-solid"
@@ -165,15 +77,6 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-
-    {/* Music pulse animation */}
-    <style jsx global>{`
-      @keyframes musicPulse {
-        0% { transform: scale(1); opacity: 0.6; }
-        50% { transform: scale(1.4); opacity: 0; }
-        100% { transform: scale(1); opacity: 0; }
-      }
-    `}</style>
     </header>
   );
 }
