@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 /**
  * Aksel Temizlik - Hardened Customer Actionları
