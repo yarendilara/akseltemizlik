@@ -493,6 +493,37 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ═══ RECRUITMENT SECTION ═══ */}
+      <section className={styles.recruitment}>
+        <div className="container">
+          <motion.div
+            className={styles.recruitmentCard}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7 }}
+          >
+            <div className={styles.recruitmentContent}>
+              <span className={styles.sectionLabel}>Kariyer</span>
+              <h2>Bizimle Çalışmak İster Misiniz?</h2>
+              <p>Zinde Temizlik ailesinin bir parçası olun. Uzman ekiplerimize katılın, profesyonel bir ortamda birlikte büyüyelim.</p>
+              <motion.a
+                href="/calisan-basvurusu"
+                className="btn-solid"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.97 }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.8rem' }}
+              >
+                Hemen Başvur <UserCheck size={18} />
+              </motion.a>
+            </div>
+            <div className={styles.recruitmentImg}>
+              <img src="/assets/bize.png" alt="Bizimle Çalışın" />
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* ═══ CTA SECTION ═══ */}
       <section className={styles.ctaSection}>
         <div className="container">
