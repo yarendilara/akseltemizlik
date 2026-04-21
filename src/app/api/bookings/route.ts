@@ -31,11 +31,23 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const bookings = await prisma.booking.findMany({
-      orderBy: { createdAt: 'desc' }
-    });
+    const { searchParams } = new URL(request.url);
+    const ids = searchParams.get('ids');
+
+    let bookings;
+    if (ids) {
+      const idArray = ids.split(',');
+      bookings = await prisma.booking.findMany({
+        where: { id: { in: idArray } },
+        orderBy: { createdAt: 'desc' }
+      });
+    } else {
+      bookings = await prisma.booking.findMany({
+        orderBy: { createdAt: 'desc' }
+      });
+    }
     return NextResponse.json(bookings);
   } catch (error) {
     return NextResponse.json({ error: "Randevular alınamadı." }, { status: 500 });

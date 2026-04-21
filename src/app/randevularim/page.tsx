@@ -18,6 +18,7 @@ import styles from './page.module.css';
 
 interface Booking {
   id: string;
+  fullId?: string;
   date: string;
   time: string;
   service: string;
@@ -25,11 +26,18 @@ interface Booking {
   createdAt: string;
 }
 
+// Map database statuses to UI statuses if needed, 
+// but here we just use the keys from STATUS_MAP.
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
-  CONFIRMED:   { label: 'Onaylandı',      color: '#0284C7', bg: 'rgba(14,165,233,0.1)' },
-  SUBMITTED:   { label: 'Değerlendirmede', color: '#B45309', bg: 'rgba(245,158,11,0.1)' },
-  CANCELLED:   { label: 'İptal Edildi',   color: '#DC2626', bg: 'rgba(239,68,68,0.1)'  },
-  default:     { label: 'Beklemede',      color: '#475569', bg: 'rgba(71,85,105,0.08)' },
+  CONFIRMED:           { label: 'Onaylandı',      color: '#0284C7', bg: 'rgba(14,165,233,0.1)' },
+  SUBMITTED:           { label: 'İletildi',       color: '#B45309', bg: 'rgba(245,158,11,0.1)' },
+  CANCELED:            { label: 'İptal Edildi',   color: '#DC2626', bg: 'rgba(239,68,68,0.1)'  },
+  PENDING_REVIEW:      { label: 'İncelemede',     color: '#B45309', bg: 'rgba(245,158,11,0.1)' },
+  AWAITING_ASSIGNMENT: { label: 'Atama Bekliyor', color: '#D4AF37', bg: 'rgba(212,175,55,0.1)' },
+  ASSIGNED:            { label: 'Ekip Atandı',    color: '#3498DB', bg: 'rgba(52,152,219,0.1)' },
+  IN_PROGRESS:         { label: 'Devam Ediyor',   color: '#E67E22', bg: 'rgba(230,126,34,0.1)' },
+  COMPLETED:           { label: 'Tamamlandı',     color: '#27AE60', bg: 'rgba(39,174,96,0.1)'  },
+  default:             { label: 'Beklemede',      color: '#475569', bg: 'rgba(71,85,105,0.08)' },
 };
 
 function getStatus(s: string) {
@@ -42,15 +50,51 @@ export default function MyBookings() {
   const [expanded, setExpanded] = useState<string | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('zinde_bookings');
-    if (saved) {
+    async function syncBookings() {
+      const saved = localStorage.getItem('zinde_bookings');
+      if (!saved) {
+        setIsLoaded(true);
+        return;
+      }
+
+      let localBookings: Booking[] = JSON.parse(saved);
+      const idsToFetch = localBookings.filter(b => b.fullId).map(b => b.fullId).join(',');
+
+      if (idsToFetch) {
+        try {
+          const res = await fetch(`/api/bookings?ids=${idsToFetch}`);
+          const serverBookings = await res.json();
+
+          if (Array.isArray(serverBookings)) {
+            // Update local state with server info
+            localBookings = localBookings.map(lb => {
+              const serverMatch = serverBookings.find(sb => sb.id === lb.fullId);
+              if (serverMatch) {
+                return {
+                  ...lb,
+                  status: serverMatch.status,
+                  // Optionally update other fields if they can change
+                };
+              }
+              return lb;
+            });
+            // Update localStorage with synced data
+            localStorage.setItem('zinde_bookings', JSON.stringify(localBookings));
+          }
+        } catch (err) {
+          console.error("Sync error:", err);
+        }
+      }
+
       setBookings(
-        JSON.parse(saved).sort((a: Booking, b: Booking) =>
+        localBookings.sort((a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
       );
+      setIsLoaded(true);
     }
-    setIsLoaded(true);
+
+    syncBookings();
   }, []);
 
   const toggle = (id: string) => setExpanded(prev => (prev === id ? null : id));

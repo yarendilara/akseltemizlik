@@ -1,25 +1,56 @@
 "use client";
 
-import { useState } from 'react';
-import { Lock, Clock, CheckCircle2, Settings, Shield } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Lock, Clock, CheckCircle2, Settings, Shield, Plus, Trash2, DollarSign } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
+import { getSiteSetting, updateSiteSetting } from '@/actions/settings';
 
 export default function SettingsAdmin() {
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('18:00');
+  const [budgets, setBudgets] = useState<string[]>(['2000-4000', '4000-7000']);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const handleSave = () => {
+  useEffect(() => {
+    async function loadSettings() {
+      const savedStartTime = await getSiteSetting('start_time');
+      const savedEndTime = await getSiteSetting('end_time');
+      const savedBudgets = await getSiteSetting('budget_options');
+      
+      if (savedStartTime) setStartTime(savedStartTime);
+      if (savedEndTime) setEndTime(savedEndTime);
+      if (savedBudgets) setBudgets(savedBudgets);
+    }
+    loadSettings();
+  }, []);
+
+  const handleSave = async () => {
     setIsSaving(true);
     setSaveSuccess(false);
     
-    setTimeout(() => {
-      setIsSaving(false);
-      setSaveSuccess(true);
-      setTimeout(() => setSaveSuccess(false), 3000);
-    }, 800);
+    await updateSiteSetting('start_time', startTime);
+    await updateSiteSetting('end_time', endTime);
+    await updateSiteSetting('budget_options', budgets);
+
+    setIsSaving(false);
+    setSaveSuccess(true);
+    setTimeout(() => setSaveSuccess(false), 3000);
+  };
+
+  const addBudget = () => {
+    setBudgets([...budgets, '']);
+  };
+
+  const removeBudget = (index: number) => {
+    setBudgets(budgets.filter((_, i) => i !== index));
+  };
+
+  const updateBudget = (index: number, val: string) => {
+    const newBudgets = [...budgets];
+    newBudgets[index] = val;
+    setBudgets(newBudgets);
   };
 
   return (
@@ -29,7 +60,7 @@ export default function SettingsAdmin() {
           <Settings size={24} style={{ color: 'var(--accent-blue)' }} />
           <h1>Sistem Ayarları</h1>
         </div>
-        <p>Platform parametrelerini ve güvenlik yapılandırmalarını buradan yönetin.</p>
+        <p>Platform parametrelerini ve bütçe aralıklarını buradan yönetin.</p>
       </div>
 
       {/* Working Hours */}
@@ -81,6 +112,58 @@ export default function SettingsAdmin() {
               />
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Budget Options */}
+      <div className={styles.tableCard} style={{ marginBottom: '1.5rem' }}>
+        <div style={{ padding: '2rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+            <DollarSign size={20} style={{ color: 'var(--accent-blue)' }} />
+            <h3 style={{ color: 'var(--text-primary)', fontSize: '1.1rem' }}>Bütçe Aralığı Ayarları</h3>
+          </div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+            {budgets.map((budget, index) => (
+              <div key={index} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  value={budget}
+                  onChange={e => updateBudget(index, e.target.value)}
+                  placeholder="Örn: 2000-4000"
+                  style={{ 
+                    flex: 1, 
+                    padding: '0.8rem 1rem', 
+                    background: 'var(--bg-card)', 
+                    border: '1.5px solid rgba(14,165,233,0.15)', 
+                    color: 'var(--text-primary)', 
+                    borderRadius: '10px' 
+                  }} 
+                />
+                <button 
+                  onClick={() => removeBudget(index)}
+                  style={{ color: '#ef4444', padding: '0.5rem' }}
+                  title="Sil"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
+            ))}
+            <button 
+              onClick={addBudget}
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '8px', 
+                color: 'var(--accent-blue)', 
+                fontSize: '0.9rem', 
+                fontWeight: 600,
+                marginTop: '0.5rem'
+              }}
+            >
+              <Plus size={16} /> Yeni Aralık Ekle
+            </button>
+          </div>
           
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button 
@@ -97,7 +180,7 @@ export default function SettingsAdmin() {
                 transition: 'all 0.2s',
               }}
             >
-              {isSaving ? "Kaydediliyor..." : "Kaydet"}
+              {isSaving ? "Kaydediliyor..." : "Ayarları Kaydet"}
             </button>
             {saveSuccess && (
               <span style={{ color: '#10b981', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>

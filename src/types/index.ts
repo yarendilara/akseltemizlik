@@ -81,3 +81,15 @@ export interface AuditLog {
   payload?: any;   // Custom metadata (IP, changes, etc.)
   timestamp: Date;
 }
+
+export interface JobApplication {
+  id: string;
+  fullName: string;
+  residence: string;
+  phone: string;
+  email?: string | null;
+  birthDate: Date | string;
+  experience: string;
+  status: string;
+  createdAt: Date | string;
+}

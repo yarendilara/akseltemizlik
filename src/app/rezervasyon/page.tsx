@@ -15,12 +15,13 @@ import {
   LayoutGrid,
   Sparkles,
   ChevronLeft,
-  ChevronRight,
-  X
+  ChevronRight
 } from 'lucide-react';
 import styles from './page.module.css';
 import { ISTANBUL_DISTRICTS, SERVICE_CONFIG, BOOKING_STATES } from '@/lib/constants';
 import { BookingService } from '@/lib/booking-service';
+
+import { getSiteSetting } from '@/actions/settings';
 
 type BookingData = {
   serviceId: keyof typeof SERVICE_CONFIG;
@@ -34,7 +35,7 @@ type BookingData = {
   notes: string;
   duration: 'FULL' | 'HALF';
   teamSize: '1' | '2' | '3';
-  budgetRange: '2000-4000' | '4000-7000' | 'OTHER';
+  budgetRange: string;
   customBudget?: string;
 };
 
@@ -54,9 +55,22 @@ function BookingFlowContent() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [budgetOptions, setBudgetOptions] = useState<string[]>(['2000-4000', '4000-7000']);
   
   // Calendar States
   const [viewDate, setViewDate] = useState(new Date());
+
+  useEffect(() => {
+    async function loadBudgets() {
+      try {
+        const saved = await getSiteSetting('budget_options');
+        if (saved && Array.isArray(saved)) setBudgetOptions(saved);
+      } catch (e) {
+        console.error("Failed to load budgets", e);
+      }
+    }
+    loadBudgets();
+  }, []);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -125,7 +139,7 @@ function BookingFlowContent() {
       let result;
       try {
         result = JSON.parse(text);
-      } catch (err) {
+      } catch {
         throw new Error("Sunucu geçersiz bir yanıt döndürdü (Muhtemelen bir hata oluştu).\nDetay: " + text.substring(0, 100));
       }
 
@@ -134,6 +148,7 @@ function BookingFlowContent() {
         const myBookings = JSON.parse(localStorage.getItem('zinde_bookings') || '[]');
         myBookings.push({
           id: result.bookingId.slice(0, 8).toUpperCase(), // Short ID for UI
+          fullId: result.bookingId, // Full UUID for background sync
           date: data.date,
           time: data.time,
           service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
@@ -147,8 +162,9 @@ function BookingFlowContent() {
       } else {
         setSubmitError("Bir hata oluştu: " + result.error);
       }
-    } catch (error: any) {
-      setSubmitError("Kayıt işlemi başarısız oldu: " + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      setSubmitError("Kayıt işlemi başarısız oldu: " + message);
     } finally {
       setIsSubmitting(false);
     }
@@ -197,7 +213,7 @@ function BookingFlowContent() {
                           })}
                         </div>
                         <div className={styles.inputGroup}>
-                          <label>İstanbul'da Hizmet Alacak İlçe</label>
+                          <label>İstanbul&apos;da Hizmet Alacak İlçe</label>
                           <div className={styles.dropdownWrapper}>
                             <div 
                               className={styles.dropdownTrigger} 
@@ -242,14 +258,13 @@ function BookingFlowContent() {
                             <div className={styles.inputGroup}>
                               <label>Bütçe Aralığı</label>
                               <div className={styles.optionGrid}>
-                                <button 
-                                  className={`${styles.optionBtn} ${data.budgetRange === '2000-4000' ? styles.active : ''}`}
-                                  onClick={() => updateData({ budgetRange: '2000-4000' })}
-                                >2 Bin - 4 Bin TL</button>
-                                <button 
-                                  className={`${styles.optionBtn} ${data.budgetRange === '4000-7000' ? styles.active : ''}`}
-                                  onClick={() => updateData({ budgetRange: '4000-7000' })}
-                                >4 Bin - 7 Bin TL</button>
+                                {budgetOptions.map(range => (
+                                  <button 
+                                    key={range}
+                                    className={`${styles.optionBtn} ${data.budgetRange === range ? styles.active : ''}`}
+                                    onClick={() => updateData({ budgetRange: range })}
+                                  >{range.replace('-', ' - ')} TL</button>
+                                ))}
                                 <button 
                                   className={`${styles.optionBtn} ${data.budgetRange === 'OTHER' ? styles.active : ''}`}
                                   onClick={() => updateData({ budgetRange: 'OTHER' })}
@@ -578,10 +593,10 @@ function BookingFlowContent() {
                         <div className={styles.successIcon}>
                           <CheckCircle2 size={72} strokeWidth={1.2} />
                         </div>
-                        <h2>Randevunuz İncelenmeye Alındı</h2>
+                        <h2>Randevunuz İşleme Alındı</h2>
                         <p>Talep No: <strong>{data.name}</strong></p>
                         <p>Talebiniz başarıyla operasyon merkezine iletildi. En kısa sürede size ulaşılacaktır.</p>
-                        <p style={{ marginTop: '0.5rem' }}>Bize "Randevularım" kısmından tüm randevularınızı takip edebilirsiniz.</p>
+                        <p style={{ marginTop: '0.5rem' }}>Bize &quot;Randevularım&quot; kısmından tüm randevularınızı takip edebilirsiniz.</p>
                         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2rem' }}>
                           <button className="btn-solid" onClick={() => window.location.href = '/randevularim'}>Randevularıma Git</button>
                           <button className="btn-primary" onClick={() => window.location.href = '/'}>Ana Sayfa</button>

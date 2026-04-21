@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Phone, Mail, Volume2, VolumeX } from 'lucide-react';
+import Link from 'next/link';
 import styles from '@/app/layout.module.css';
 
 export default function Navbar() {
@@ -63,7 +64,7 @@ export default function Navbar() {
     } else if (!isPlaying) {
       audioRef.current.pause();
     }
-  }, [isPlaying]);
+  }, [isPlaying, audioRef]);
 
   const toggleMusic = () => {
     setIsPlaying(prev => !prev);
@@ -97,9 +98,9 @@ export default function Navbar() {
 
       <nav className={styles.navbar}>
         <div className={`container ${styles.navContainer}`}>
-          <a href="/" className={styles.logo}>
+          <Link href="/" className={styles.logo}>
             ZİNDE<span className={styles.logoHighlight}>TEMİZLİK</span>
-          </a>
+          </Link>
 
         {/* Mobile Menu Button */}
         <button
@@ -114,6 +115,7 @@ export default function Navbar() {
         <div className={`${styles.navLinks} ${isOpen ? styles.navLinksOpen : ''}`}>
           <a href="/hakkimizda" onClick={() => setIsOpen(false)}>Hakkımızda</a>
           <a href="/randevularim" onClick={() => setIsOpen(false)}>Randevularım</a>
+          <a href="/calisan-basvurusu" onClick={() => setIsOpen(false)}>Çalışan Başvurusu</a>
         </div>
 
         {/* CTA Actions */}
