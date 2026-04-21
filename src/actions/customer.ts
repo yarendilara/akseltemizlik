@@ -14,16 +14,22 @@ import { revalidatePath } from "next/cache";
  * 1. Randevu Oluşturma (Transaction & Normalized UTC)
  */
 export async function createBookingTask(payload: { serviceId: string, districtId: string, startAt: Date, address: string, notes?: string }) {
-  // 1. Session Resolve & Role Check
   const session = await requireRole("CUSTOMER");
+  
+  // 2. Fetch Profile Info
+  const profile = await prisma.customerProfile.findUnique({
+    where: { userId: session.user.id }
+  });
 
-  // 2. Duration & Buffer Calculation
+  if (!profile) throw new Error("Rezervasyon yapabilmek için önce profil bilgilerinizi tamamlamalısınız.");
+
+  // 3. Duration & Buffer Calculation
   const config = SERVICE_CONFIG[payload.serviceId as keyof typeof SERVICE_CONFIG];
   const startAt = new Date(payload.startAt);
   const endAt = new Date(startAt.getTime() + (config.duration + config.buffer) * 60000);
 
   return await prisma.$transaction(async (tx) => {
-    // 3. Admin Calendar Block Check (Normalized Timestamp)
+    // 4. Admin Calendar Block Check (Normalized Timestamp)
     const block = await tx.adminCalendarBlock.findFirst({
       where: {
         AND: [
@@ -35,12 +41,12 @@ export async function createBookingTask(payload: { serviceId: string, districtId
 
     if (block) throw new Error("Bu zaman dilimi operasyon ekibi tarafından kapatılmıştır.");
 
-    // 4. Create Booking Entry
+    // 5. Create Booking Entry
     const booking = await tx.booking.create({
       data: {
         customerId: session.user.id,
-        customerName: "Kayıtlı Müşteri",
-        customerPhone: "Sistemde Kayıtlı",
+        customerName: profile.name,
+        customerPhone: profile.phone,
         customerEmail: session.user.email,
         serviceId: payload.serviceId,
         districtId: payload.districtId,
