@@ -350,7 +350,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <img src="/images/foto1.jpg" alt="Zinde Temizlik Süreci" />
+            <img src="/assets/bize2.png" alt="Zinde Temizlik Hizmetleri" />
           </motion.div>
         </div>
       </div>
