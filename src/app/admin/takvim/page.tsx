@@ -263,6 +263,11 @@ export default function CalendarAdmin() {
                       <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '0.3rem' }}>
                         {b.serviceId} • {b.districtId} • {formatTime(b.startAt)}
                       </div>
+                      {b.assignments && b.assignments.length > 0 && (
+                        <div style={{ fontSize: '0.85rem', color: '#0EA5E9', fontWeight: 600, marginTop: '0.3rem' }}>
+                          👤 Atanan: {b.assignments[0]?.cleaner?.user?.fullName || b.assignments[0]?.cleaner?.user?.email}
+                        </div>
+                      )}
                     </div>
                     <span className={styles.statusBadge} style={{
                       background: ((BOOKING_STATES as any)[b.status] || BOOKING_STATES.SUBMITTED).color + '22',
@@ -318,6 +323,18 @@ export default function CalendarAdmin() {
                     <p style={{ color: ((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).color }}>
                       {((BOOKING_STATES as any)[selectedBooking.status] || BOOKING_STATES.SUBMITTED).label}
                     </p>
+                  </div>
+                  {selectedBooking.assignments && selectedBooking.assignments.length > 0 && (
+                    <div className={styles.detailItem} style={{ gridColumn: '1/-1' }}>
+                      <label>Atanan Personel</label>
+                      <p style={{ color: 'var(--accent-blue)', fontWeight: 600 }}>
+                        {selectedBooking.assignments[0]?.cleaner?.user?.fullName || selectedBooking.assignments[0]?.cleaner?.user?.email}
+                      </p>
+                    </div>
+                  )}
+                  <div className={styles.detailItem} style={{ gridColumn: '1/-1' }}>
+                    <label>Notlar</label>
+                    <p style={{ whiteSpace: 'pre-wrap' }}>{selectedBooking.notes || "Not bulunmuyor."}</p>
                   </div>
                 </div>
                 <div className={styles.contactActions}>

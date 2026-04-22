@@ -60,7 +60,18 @@ export async function GET(request: Request) {
       });
     } else {
       bookings = await prisma.booking.findMany({
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        include: {
+          assignments: {
+            include: {
+              cleaner: {
+                include: {
+                  user: true
+                }
+              }
+            }
+          }
+        }
       });
     }
     return NextResponse.json(bookings);
