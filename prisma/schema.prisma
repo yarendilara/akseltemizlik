@@ -7,7 +7,7 @@ datasource db {
 }
 
 /// *
-///  * USERS & PROFILES
+/// * USERS & PROFILES
 model User {
   id              String           @id @default(uuid())
   email           String           @unique
@@ -61,7 +61,7 @@ model CleanerApplication {
 }
 
 /// *
-///  * BOOKINGS & SCHEDULING
+/// * BOOKINGS & SCHEDULING
 model Booking {
   id            String              @id @default(uuid())
   status        BookingStatus       @default(SUBMITTED)
@@ -110,7 +110,7 @@ model AdminCalendarBlock {
 }
 
 /// *
-///  * SECURITY & LOGS
+/// * SECURITY & LOGS
 model AuditLog {
   id             String   @id @default(uuid())
   actorId        String?

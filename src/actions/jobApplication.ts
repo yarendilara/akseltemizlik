@@ -28,7 +28,6 @@ export async function submitJobApplication(payload: {
     // Audit log
     await prisma.auditLog.create({
       data: {
-        actorId: null, // Public application has no user actor
         action: "SUBMIT_JOB_APP",
         targetResource: "JobApplication",
         targetId: application.id,

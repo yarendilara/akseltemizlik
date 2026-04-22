@@ -46,7 +46,6 @@ export async function submitCleanerApplication(payload: { fullName: string, tckn
     // 4. Audit Log (Hassas Veri Girişi Loglanır)
     await tx.auditLog.create({
       data: {
-        actorId: null,
         action: "SUBMIT_CLEANER_APP",
         targetResource: "CleanerApplication",
         targetId: application.id,
