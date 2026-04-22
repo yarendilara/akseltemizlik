@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+import { headers } from 'next/headers';
+import { rateLimit } from '@/lib/rate-limit';
+
+import { NotificationService } from '@/lib/notifications';
+
 export async function POST(request: Request) {
+  // Rate Limiting (3 per hour)
+  const clientIp = (await headers()).get('x-forwarded-for') || 'unknown';
+  const rl = await rateLimit(`booking:${clientIp}`, 3, 3600);
+  if (!rl.success) {
+    return NextResponse.json({ error: "Çok fazla rezervasyon denemesi yaptınız. Lütfen daha sonra tekrar deneyin." }, { status: 429 });
+  }
+
   try {
     const data = await request.json();
     
@@ -22,6 +34,9 @@ export async function POST(request: Request) {
         status: 'SUBMITTED',
       }
     });
+
+    // 4. Send Notifications
+    await NotificationService.notifyBookingReceived(booking);
 
     return NextResponse.json({ success: true, bookingId: booking.id });
   } catch (error: any) {

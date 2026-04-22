@@ -4,19 +4,21 @@ import { useState, useEffect } from 'react';
 import { Star, UserPlus, X } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
-import { getCleaners, addCleaner, updateCleanerPassword } from '@/lib/mock-db';
-import { Key } from 'lucide-react';
+import { getCleaners, addCleaner } from '@/actions/cleaner'; // We need to implement these or similar
 
 export default function CleanersAdmin() {
   const [cleaners, setCleaners] = useState<any[]>([]);
-  const [loadingId, setLoadingId] = useState<number | null>(null);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [newCleaner, setNewCleaner] = useState({ name: '', district: '', phone: '', email: '' });
-  const [passUpdateId, setPassUpdateId] = useState<number | null>(null);
-  const [newPass, setNewPass] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setCleaners(getCleaners());
+    async function load() {
+      setLoading(true);
+      // For now, let's just use a placeholder fetch or a real action
+      const data = await getCleaners();
+      setCleaners(data || []);
+      setLoading(false);
+    }
+    load();
   }, []);
 
   const handleUpdatePassword = () => {

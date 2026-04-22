@@ -9,12 +9,21 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { encryptSensitiveData } from "@/lib/encryption";
+import { headers } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
 
 /**
  * 1. Temizlikçi Başvurusu (Public Action)
  * No role required, but security hardening on data.
  */
 export async function submitCleanerApplication(payload: { fullName: string, tckn: string, phone: string, email: string, districts: string[], serviceIds: string[], documentKey: string }) {
+  // Rate Limiting (3 per hour)
+  const clientIp = (await headers()).get("x-forwarded-for") || "unknown";
+  const rl = await rateLimit(`cleanerapp:${clientIp}`, 3, 3600);
+  if (!rl.success) {
+      return { success: false, error: "Çok fazla başvuru denemesi yaptınız." };
+  }
+
   // 1. Transaction Safety & Integrity Checks
   return await prisma.$transaction(async (tx) => {
     // 2. Check for Duplicate Application
@@ -49,7 +58,7 @@ export async function submitCleanerApplication(payload: { fullName: string, tckn
         action: "SUBMIT_CLEANER_APP",
         targetResource: "CleanerApplication",
         targetId: application.id,
-        payload: JSON.stringify({ email: payload.email, districts: payload.districts })
+        payload: encryptSensitiveData(JSON.stringify({ fullName: payload.fullName, phone: payload.phone, email: payload.email, districts: payload.districts }))
       }
     });
 

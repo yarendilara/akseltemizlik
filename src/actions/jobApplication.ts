@@ -3,6 +3,9 @@
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
+import { rateLimit } from "@/lib/rate-limit";
+import { encryptSensitiveData } from "@/lib/encryption";
 
 export async function submitJobApplication(payload: {
   fullName: string;
@@ -12,6 +15,13 @@ export async function submitJobApplication(payload: {
   birthDate: Date;
   experience: string;
 }) {
+  // Rate Limiting (3 submissions per hour per IP)
+  const clientIp = (await headers()).get("x-forwarded-for") || "unknown";
+  const rl = await rateLimit(`jobapp:${clientIp}`, 3, 3600);
+  if (!rl.success) {
+    return { success: false, error: "Çok fazla başvuru denemesi yaptınız. Lütfen 1 saat sonra tekrar deneyin." };
+  }
+
   try {
     const application = await prisma.jobApplication.create({
       data: {
@@ -24,14 +34,13 @@ export async function submitJobApplication(payload: {
         status: "SUBMITTED",
       },
     });
-
     // Audit log
     await prisma.auditLog.create({
       data: {
         action: "SUBMIT_JOB_APP",
         targetResource: "JobApplication",
         targetId: application.id,
-        payload: JSON.stringify({ fullName: payload.fullName, phone: payload.phone }),
+        payload: encryptSensitiveData(JSON.stringify({ fullName: payload.fullName, phone: payload.phone })),
       },
     });
 
