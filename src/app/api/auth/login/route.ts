@@ -10,6 +10,8 @@ const JWT_SECRET = new TextEncoder().encode(
 
 export async function POST(request: Request) {
   try {
+    const { password } = await request.json();
+
     // 1. Find the admin user in DB
     let adminUser = await prisma.user.findFirst({
       where: { role: 'ADMIN' }
