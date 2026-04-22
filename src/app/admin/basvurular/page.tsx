@@ -177,8 +177,25 @@ export default function JobApplicationsAdmin() {
 
                 <button 
                   className={styles.actionBtn}
-                  style={{ width: '100%', border: 'none', background: 'none', color: 'var(--text-secondary)', fontSize: '13px', marginTop: '5px' }}
-                  onClick={() => handleStatusUpdate(selectedApp.id, 'REVIEWED')}
+                  style={{ 
+                    width: '100%', 
+                    border: '1px solid var(--border)', 
+                    background: 'var(--bg-accent)', 
+                    color: 'var(--text-secondary)', 
+                    fontSize: '13px', 
+                    marginTop: '5px',
+                    padding: '10px',
+                    borderRadius: '8px',
+                    cursor: 'pointer'
+                  }}
+                  onClick={async () => {
+                    try {
+                      await handleStatusUpdate(selectedApp.id, 'REVIEWED');
+                      alert("Durum güncellendi.");
+                    } catch (e) {
+                      alert("Bir hata oluştu.");
+                    }
+                  }}
                 >
                   İncelendi Olarak İşaretle
                 </button>
