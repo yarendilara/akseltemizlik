@@ -18,10 +18,15 @@ export default function JobApplicationsAdmin() {
   const [selectedApp, setSelectedApp] = useState<JobApplication | null>(null);
 
   const fetchApplications = React.useCallback(async () => {
-    setLoading(true);
-    const data = await getJobApplications();
-    setApplications(data as JobApplication[]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = await getJobApplications();
+      setApplications(data as JobApplication[]);
+    } catch (error) {
+      console.error("Başvurular yüklenirken hata oluştu:", error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
