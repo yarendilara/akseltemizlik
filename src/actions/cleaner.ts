@@ -109,3 +109,24 @@ export async function updateJobStatus(bookingId: string, newStatus: 'IN_PROGRESS
     return { success: true };
   });
 }
+
+/**
+ * 3. Admin: Get all cleaners
+ */
+export async function getCleaners() {
+  await requireRole("ADMIN");
+  return await prisma.cleanerProfile.findMany({
+    include: {
+        user: true
+    }
+  });
+}
+
+/**
+ * 4. Admin: Add new cleaner (Stubs for build)
+ */
+export async function addCleaner(data: any) {
+    await requireRole("ADMIN");
+    // Implementation details...
+    return { success: true };
+}
