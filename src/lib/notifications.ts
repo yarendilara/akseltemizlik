@@ -17,7 +17,7 @@ export const NotificationService = {
         return;
       }
       await resend.emails.send({
-        from: "Aksel Temizlik <onboarding@resend.dev>", // Transition to your domain in prod
+        from: "Zinde Temizlik <info@zindetemizlik.info>",
         to,
         subject,
         html,
@@ -46,7 +46,7 @@ export const NotificationService = {
    * High-level: Booking Confirmation
    */
   async notifyBookingReceived(booking: any) {
-    const subject = "Rezervasyon Talebiniz Alındı - Aksel Temizlik";
+    const subject = "Rezervasyon Talebiniz Alındı - Zinde Temizlik";
     const html = `
       <h1>Merhaba ${booking.customerName},</h1>
       <p>Rezervasyon talebiniz başarıyla alınmıştır.</p>
@@ -60,14 +60,14 @@ export const NotificationService = {
     `;
     
     await this.sendEmail(booking.customerEmail, subject, html);
-    await this.sendSMS(booking.customerPhone, `Merhaba ${booking.customerName}, Aksel Temizlik rezervasyon talebiniz alindi. En kisa surede donus yapilacaktir.`);
+    await this.sendSMS(booking.customerPhone, `Merhaba ${booking.customerName}, Zinde Temizlik rezervasyon talebiniz alindi. En kisa surede donus yapilacaktir.`);
   },
 
   /**
    * High-level: Team Assigned
    */
   async notifyTeamAssigned(booking: any, cleanerName: string) {
-    const subject = "Randevunuza Ekip Atandı! - Aksel Temizlik";
+    const subject = "Randevunuza Ekip Atandı! - Zinde Temizlik";
     const html = `
       <h1>Güzel Haber!</h1>
       <p>Randevunuza temizlik uzmanımız <strong>${cleanerName}</strong> atanmıştır.</p>
@@ -75,6 +75,6 @@ export const NotificationService = {
     `;
     
     await this.sendEmail(booking.customerEmail, subject, html);
-    await this.sendSMS(booking.customerPhone, `Aksel Temizlik: Randevunuza ${cleanerName} atanmistir. Belirlenen saatte gorusmek uzere.`);
+    await this.sendSMS(booking.customerPhone, `Zinde Temizlik: Randevunuza ${cleanerName} atanmistir. Belirlenen saatte gorusmek uzere.`);
   }
 };
