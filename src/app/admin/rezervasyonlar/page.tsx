@@ -46,10 +46,23 @@ export default function ReservationsAdmin() {
   }, [resList, search, statusFilter]);
 
   const loadData = async () => {
-    const resp = await fetch('/api/bookings');
-    const data = await resp.json();
-    if (Array.isArray(data)) {
-      setResList(data);
+    try {
+      const resp = await fetch('/api/bookings');
+      if (!resp.ok) {
+        const errorData = await resp.json();
+        console.error("API Error:", errorData);
+        alert("Randevular yüklenemedi: " + (errorData.error || "Sunucu hatası"));
+        return;
+      }
+      const data = await resp.json();
+      if (Array.isArray(data)) {
+        setResList(data);
+      } else {
+        console.error("Unexpected data format:", data);
+      }
+    } catch (err) {
+      console.error("Fetch Error:", err);
+      alert("Bağlantı hatası: Randevular sunucudan alınamadı.");
     }
   };
 

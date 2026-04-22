@@ -21,9 +21,14 @@ export default function JobApplicationsAdmin() {
     try {
       setLoading(true);
       const data = await getJobApplications();
-      setApplications(data as JobApplication[]);
-    } catch (error) {
+      if (Array.isArray(data)) {
+        setApplications(data as JobApplication[]);
+      } else {
+        alert("Hata: Veri formatı geçersiz.");
+      }
+    } catch (error: any) {
       console.error("Başvurular yüklenirken hata oluştu:", error);
+      alert("Hata: " + (error.message || "Başvurular alınamadı. Yetkiniz olmayabilir veya sunucu hatası oluştu."));
     } finally {
       setLoading(false);
     }
