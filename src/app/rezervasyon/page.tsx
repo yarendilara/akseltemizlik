@@ -19,12 +19,13 @@ import {
 } from 'lucide-react';
 import styles from './page.module.css';
 import { ISTANBUL_DISTRICTS, SERVICE_CONFIG, BOOKING_STATES } from '@/lib/constants';
+import { getServices } from '@/lib/mock-db';
 import { BookingService } from '@/lib/booking-service';
 
 import { getSiteSetting } from '@/actions/settings';
 
 type BookingData = {
-  serviceId: keyof typeof SERVICE_CONFIG;
+  serviceId: string;
   district: string;
   address: string;
   date: string;
@@ -39,7 +40,7 @@ type BookingData = {
   customBudget?: string;
 };
 
-const IconMap = {
+const IconMap: any = {
   Home,
   Building2,
   Layers,
@@ -56,6 +57,7 @@ function BookingFlowContent() {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [budgetOptions, setBudgetOptions] = useState<string[]>(['2000-4000', '4000-7000']);
+  const [services, setServices] = useState<any>(SERVICE_CONFIG);
   
   // Calendar States
   const [viewDate, setViewDate] = useState(new Date());
@@ -70,6 +72,12 @@ function BookingFlowContent() {
       }
     }
     loadBudgets();
+    
+    // Load Dynamic Services
+    const dynamicServices = getServices();
+    if (dynamicServices && Object.keys(dynamicServices).length > 0) {
+      setServices(dynamicServices);
+    }
   }, []);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -111,8 +119,8 @@ function BookingFlowContent() {
     if (d && ISTANBUL_DISTRICTS.includes(d)) {
       update.district = d;
     }
-    if (s && s in SERVICE_CONFIG) {
-      update.serviceId = s as keyof typeof SERVICE_CONFIG;
+    if (s && s in services) {
+      update.serviceId = s;
     }
 
     if (Object.keys(update).length > 0) {
@@ -151,7 +159,7 @@ function BookingFlowContent() {
           fullId: result.bookingId, // Full UUID for background sync
           date: data.date,
           time: data.time,
-          service: data.serviceId ? SERVICE_CONFIG[data.serviceId].name : '',
+          service: data.serviceId ? services[data.serviceId]?.name || '' : '',
           status: 'SUBMITTED',
           createdAt: new Date().toISOString()
         });
@@ -195,13 +203,13 @@ function BookingFlowContent() {
                       <div className={styles.stepContent}>
                         <h2>Hizmet ve Bölge Seçimi</h2>
                         <div className={styles.serviceGrid}>
-                          {Object.entries(SERVICE_CONFIG).map(([id, service]) => {
-                            const Icon = IconMap[service.icon as keyof typeof IconMap];
+                          {Object.entries(services).map(([id, service]: [string, any]) => {
+                            const Icon = IconMap[service.icon] || LayoutGrid;
                             return (
                               <div 
                                 key={id} 
                                 className={`${styles.selectCard} ${data.serviceId === id ? styles.active : ''}`}
-                                onClick={() => updateData({ serviceId: id as keyof typeof SERVICE_CONFIG })}
+                                onClick={() => updateData({ serviceId: id })}
                               >
                                 <span className={styles.icon}>
                                   <Icon strokeWidth={1.5} size={32} />
@@ -526,7 +534,7 @@ function BookingFlowContent() {
                           </div>
                           <div className={styles.summaryItem}>
                             <span>Hizmet Türü:</span>
-                            <strong>{data.serviceId && SERVICE_CONFIG[data.serviceId].name}</strong>
+                            <strong>{data.serviceId && services[data.serviceId]?.name}</strong>
                           </div>
                           <div className={styles.summarySplit}>
                             <div className={styles.summaryItem}>

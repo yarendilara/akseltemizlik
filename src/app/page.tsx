@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import styles from './page.module.css';
 import { ISTANBUL_DISTRICTS, SERVICE_CONFIG } from '@/lib/constants';
+import { getServices } from '@/lib/mock-db';
 
 const IconMap = {
   Home: HomeIcon,
@@ -84,6 +85,14 @@ export default function Home() {
   const [serviceId, setServiceId] = useState('');
   const [isDistOpen, setIsDistOpen] = useState(false);
   const [isServOpen, setIsServOpen] = useState(false);
+  const [services, setServices] = useState<any>(SERVICE_CONFIG);
+
+  useEffect(() => {
+    const dynamicServices = getServices();
+    if (dynamicServices && Object.keys(dynamicServices).length > 0) {
+      setServices(dynamicServices);
+    }
+  }, []);
 
   const handleQuickBooking = () => {
     const url = new URL('/rezervasyon', window.location.origin);
@@ -240,7 +249,7 @@ export default function Home() {
                       className={styles.dropdownTrigger}
                       onClick={() => { setIsServOpen(!isServOpen); setIsDistOpen(false); }}
                     >
-                      {serviceId ? SERVICE_CONFIG[serviceId as keyof typeof SERVICE_CONFIG].name : 'Hizmet Seçiniz'}
+                      {serviceId ? (services[serviceId as keyof typeof services]?.name || 'Hizmet Seçiniz') : 'Hizmet Seçiniz'}
                       <ChevronDown size={14} className={styles.chevron} style={{ opacity: 0.5 }} />
                     </div>
                     {isServOpen && (
@@ -251,7 +260,7 @@ export default function Home() {
                         className={styles.dropdownPanel}
                       >
                         <div className={styles.dropdownScrollArea}>
-                          {Object.entries(SERVICE_CONFIG).map(([id, s]) => (
+                          {Object.entries(services).map(([id, s]: [string, any]) => (
                             <div
                               key={id}
                               className={`${styles.dropdownOption} ${serviceId === id ? styles.selected : ''}`}
@@ -417,8 +426,8 @@ export default function Home() {
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
           >
-            {Object.entries(SERVICE_CONFIG).map(([id, service], index) => {
-              const Icon = IconMap[service.icon as keyof typeof IconMap];
+            {Object.entries(services).map(([id, service]: [string, any], index) => {
+              const Icon = (IconMap as any)[service.icon] || IconMap.LayoutGrid;
               return (
                 <motion.div
                   key={id}
