@@ -148,22 +148,36 @@ export default function JobApplicationsAdmin() {
                 </div>
               </div>
 
-              <div className={styles.modalFooter}>
-                <button 
-                  className={styles.approveBtn}
-                  onClick={() => handleStatusUpdate(selectedApp.id, 'HIRED')}
+              <div className={styles.modalFooter} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                <div style={{ display: 'flex', gap: '10px', width: '100%' }}>
+                  <a 
+                    href={`tel:${selectedApp.phone}`}
+                    className={styles.approveBtn}
+                    style={{ flex: 1, textDecoration: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', background: '#3498db', color: 'white' }}
+                  >
+                    Hemen Ara
+                  </a>
+                  <a 
+                    href={`https://wa.me/${selectedApp.phone.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    className={styles.approveBtn}
+                    style={{ flex: 1, textDecoration: 'none', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', background: '#2ecc71', color: 'white' }}
+                  >
+                    WhatsApp
+                  </a>
+                </div>
+                
+                <a 
+                  href={`mailto:${selectedApp.email}?subject=İş Başvurusu Hakkında - Zinde Temizlik`}
+                  className={styles.actionBtn}
+                  style={{ width: '100%', textDecoration: 'none', textAlign: 'center', display: 'block', padding: '12px' }}
                 >
-                  <CheckCircle size={18} /> İşe Al
-                </button>
-                <button 
-                  className={styles.rejectBtn}
-                  onClick={() => handleStatusUpdate(selectedApp.id, 'REJECTED')}
-                >
-                  <XCircle size={18} /> Reddet
-                </button>
+                  E-posta Gönder
+                </a>
+
                 <button 
                   className={styles.actionBtn}
-                  style={{ gridColumn: '1/-1', textAlign: 'center', color: 'var(--text-secondary)' }}
+                  style={{ width: '100%', border: 'none', background: 'none', color: 'var(--text-secondary)', fontSize: '13px', marginTop: '5px' }}
                   onClick={() => handleStatusUpdate(selectedApp.id, 'REVIEWED')}
                 >
                   İncelendi Olarak İşaretle
