@@ -10,18 +10,31 @@ const JWT_SECRET = new TextEncoder().encode(
 
 export async function POST(request: Request) {
   try {
-    const { password } = await request.json();
-
     // 1. Find the admin user in DB
-    const adminUser = await prisma.user.findFirst({
+    let adminUser = await prisma.user.findFirst({
       where: { role: 'ADMIN' }
     });
 
-    if (!adminUser) {
-      return NextResponse.json({ error: "Sistemde admin bulunamadı." }, { status: 500 });
+    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "AkselAdmin2024!";
+
+    // 2. Auto-Seed Logic for First Run
+    if (!adminUser && password === ADMIN_PASSWORD) {
+      console.log("Admin not found, auto-seeding with ADMIN_PASSWORD...");
+      const hashedPassword = await bcrypt.hash(ADMIN_PASSWORD, 10);
+      adminUser = await prisma.user.create({
+        data: {
+          email: "admin@zindetemizlik.local",
+          passwordHash: hashedPassword,
+          role: "ADMIN",
+        }
+      });
     }
 
-    // 2. Compare password
+    if (!adminUser) {
+      return NextResponse.json({ error: "Sistemde admin bulunamadı ve şifre eşleşmedi." }, { status: 401 });
+    }
+
+    // 3. Compare password
     const isMatch = await bcrypt.compare(password, adminUser.passwordHash);
 
     if (isMatch) {
