@@ -25,6 +25,7 @@ const IconMap: any = {
 export default function ServicesAdmin() {
   const [services, setServices] = useState<any>({});
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
      id: '',
@@ -51,14 +52,18 @@ export default function ServicesAdmin() {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Bu hizmeti silmek istediğinize emin misiniz?')) {
-        const success = deleteService(id);
+    setDeleteConfirmId(id);
+  };
+
+  const confirmDelete = () => {
+    if (deleteConfirmId) {
+        const success = deleteService(deleteConfirmId);
         if (success) {
-            // Update state directly for instant feedback
             const updated = { ...services };
-            delete updated[id];
+            delete updated[deleteConfirmId];
             setServices(updated);
         }
+        setDeleteConfirmId(null);
     }
   };
 
@@ -227,6 +232,35 @@ export default function ServicesAdmin() {
                           {editingId ? "Değişiklikleri Kaydet" : "Hizmeti Oluştur"}
                       </button>
                   </form>
+              </div>
+          </div>
+      )}
+      {/* Custom Delete Confirmation Modal */}
+      {deleteConfirmId && (
+          <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1100, padding: '20px', backdropFilter: 'blur(5px)' }}>
+              <div style={{ background: 'var(--bg-card)', padding: '30px', borderRadius: '16px', border: '1px solid var(--border)', maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+                  <div style={{ color: '#ef4444', marginBottom: '20px' }}>
+                    <Trash2 size={48} style={{ margin: '0 auto' }} />
+                  </div>
+                  <h2 style={{ fontSize: '1.5rem', marginBottom: '10px' }}>Hizmeti Sil</h2>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: '30px' }}>
+                    "{services[deleteConfirmId]?.name}" hizmetini silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+                  </p>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                      <button 
+                        onClick={() => setDeleteConfirmId(null)}
+                        style={{ padding: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)', cursor: 'pointer', fontWeight: '600' }}
+                      >
+                        Vazgeç
+                      </button>
+                      <button 
+                        onClick={confirmDelete}
+                        style={{ padding: '12px', background: '#ef4444', border: 'none', borderRadius: '8px', color: 'white', cursor: 'pointer', fontWeight: '600' }}
+                      >
+                        Evet, Sil
+                      </button>
+                  </div>
               </div>
           </div>
       )}
