@@ -4,6 +4,7 @@
  */
 
 import { SERVICE_CONFIG, BookingStatus } from './constants';
+import { getServices } from './mock-db';
 
 export type Slot = {
   startTime: string; // HH:mm
@@ -24,9 +25,16 @@ export class BookingService {
   static getAvailableSlots(
     date: string, 
     district: string, 
-    serviceId: keyof typeof SERVICE_CONFIG
+    serviceId: string
   ): Slot[] {
-    const config = SERVICE_CONFIG[serviceId];
+    const services = getServices();
+    const config = services[serviceId] || (SERVICE_CONFIG as any)[serviceId];
+    
+    if (!config) {
+      console.warn(`Service config not found for ${serviceId}`);
+      return [];
+    }
+
     const totalDuration = config.duration + config.buffer;
     
     // Basitleştirilmiş slot listesi (Sadece başlangıç saatlerini gösterir)
