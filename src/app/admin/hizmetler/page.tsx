@@ -52,8 +52,13 @@ export default function ServicesAdmin() {
 
   const handleDelete = (id: string) => {
     if (confirm('Bu hizmeti silmek istediğinize emin misiniz?')) {
-        deleteService(id);
-        setServices(getServices());
+        const success = deleteService(id);
+        if (success) {
+            // Update state directly for instant feedback
+            const updated = { ...services };
+            delete updated[id];
+            setServices(updated);
+        }
     }
   };
 
@@ -96,8 +101,21 @@ export default function ServicesAdmin() {
                     <Icon size={32} strokeWidth={1.5} />
                   </div>
                   <button 
-                    onClick={() => handleDelete(id)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '5px' }}
+                    onClick={(e) => { e.stopPropagation(); handleDelete(id); }}
+                    style={{ 
+                      background: 'rgba(239, 68, 68, 0.1)', 
+                      border: 'none', 
+                      color: '#ef4444', 
+                      cursor: 'pointer', 
+                      padding: '8px',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)')}
+                    onMouseOut={(e) => (e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)')}
                     title="Sil"
                   >
                     <Trash2 size={18} />
