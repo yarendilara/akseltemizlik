@@ -306,7 +306,7 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.8 }}
             >
               <video 
-                src="/assets/zinde_video.mp4" 
+                src="/assets/zinde_video.mov" 
                 controls 
                 autoPlay 
                 muted 
