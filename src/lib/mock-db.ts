@@ -27,6 +27,16 @@ export const addService = (id: string, serviceData: any) => {
     return services[id];
 }
 
+export const deleteService = (id: string) => {
+    const services = getServices();
+    if (services[id]) {
+        delete services[id];
+        localStorage.setItem("zinde_mock_services", JSON.stringify(services));
+        return true;
+    }
+    return false;
+}
+
 export const getCleaners = () => {
   if (typeof window === "undefined") return [];
   const stored = localStorage.getItem("zinde_mock_cleaners");

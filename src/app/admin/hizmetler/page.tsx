@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import styles from '../page.module.css';
-import { getServices, updateService, addService } from '@/lib/mock-db';
+import { getServices, updateService, addService, deleteService } from '@/lib/mock-db';
 
 const IconMap: any = {
   Home,
@@ -48,6 +48,13 @@ export default function ServicesAdmin() {
     setEditingId(null);
     setFormData({ id: '', name: '', duration: 120, buffer: 30, icon: 'Home' });
     setShowModal(true);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm('Bu hizmeti silmek istediğinize emin misiniz?')) {
+        deleteService(id);
+        setServices(getServices());
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -88,6 +95,13 @@ export default function ServicesAdmin() {
                   <div style={{ color: 'var(--accent-blue)', marginBottom: '1.5rem' }}>
                     <Icon size={32} strokeWidth={1.5} />
                   </div>
+                  <button 
+                    onClick={() => handleDelete(id)}
+                    style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '5px' }}
+                    title="Sil"
+                  >
+                    <Trash2 size={18} />
+                  </button>
               </div>
               
               <h4 style={{ color: 'var(--text-primary)', marginBottom: '0.8rem', fontSize: '1.25rem' }}>{s.name}</h4>
