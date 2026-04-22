@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { SignJWT } from 'jose';
+import { prisma } from '@/lib/prisma';
+import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = new TextEncoder().encode(
   process.env.JWT_SECRET || "aksel_clean_secret_key_change_me_in_prod"
@@ -10,20 +12,22 @@ export async function POST(request: Request) {
   try {
     const { password } = await request.json();
 
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+    // 1. Find the admin user in DB
+    const adminUser = await prisma.user.findFirst({
+      where: { role: 'ADMIN' }
+    });
 
-    if (!ADMIN_PASSWORD) {
-      return NextResponse.json(
-        { error: "Sistem yapılandırma hatası. Yönetici şifresi tanımlanmamış." },
-        { status: 500 }
-      );
+    if (!adminUser) {
+      return NextResponse.json({ error: "Sistemde admin bulunamadı." }, { status: 500 });
     }
 
-    if (password === ADMIN_PASSWORD) {
-      // getSession()'ın beklediği formatta imzalı JWT üret
+    // 2. Compare password
+    const isMatch = await bcrypt.compare(password, adminUser.passwordHash);
+
+    if (isMatch) {
       const token = await new SignJWT({
-        id: "admin",
-        email: "admin@zindetemizlik.local",
+        id: adminUser.id,
+        email: adminUser.email,
         role: "ADMIN",
       })
         .setProtectedHeader({ alg: "HS256" })
